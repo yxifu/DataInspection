@@ -12,6 +12,7 @@ import com.yxifu.datainspection.service.IGroupService;
 import com.yxifu.datainspection.service.IItemService;
 import com.yxifu.datainspection.service.ITriggerService;
 import com.yxifu.datainspection.util.Tools;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +30,7 @@ import java.util.UUID;
  * @date 2020/05/24
  **/
 
+@Slf4j
 @RequestMapping("group")
 @Controller
 public class GroupController {
@@ -65,7 +67,7 @@ public class GroupController {
         return "group/list";
     }
 
-
+/*
     @RequestMapping(value = "/edit",method = RequestMethod.GET)
     public String index(Model model, @PathParam("id") int id, HttpServletRequest request, HttpServletResponse response){
 
@@ -81,37 +83,64 @@ public class GroupController {
         model.addAttribute("apiInterface",null);
         model.addAttribute("topNavBar","group");
         return "group/edit";
-    }
+    }*/
 
 
-    @RequestMapping(value = "/edit",method = RequestMethod.POST)
-    public String index(Model model, Group group
+    @RequestMapping(value = "/edit",method = {RequestMethod.GET,RequestMethod.POST})
+    public String index(Model model, @PathParam("id") String id, Group group
             , HttpServletRequest request, HttpServletResponse response){
-        int id= group.getGroupId();
+
         ApiInterface<Group> apiInterface = new ApiInterface<>();
-        if(id>0) {
-            group.setLastUpdateTime(Tools.formatDate(Tools.DateFormat_yyyyMMDDHHmmss));
-            boolean b = this.iGroupService.updateById(group);
-            this.quartzService.initByGroup();
-            //model.addAttribute("ispost",true);
-            apiInterface.setData(group);
-            if(!b){
-                apiInterface.setError_code(500);
-                apiInterface.setMessage("更新出错");
+
+        if(group.getGroupId()==null){//GET
+
+            try {
+                if(!"".equals(id) &&! "0".equals(id) && id!=null) {//从数据库读
+                    group = this.iGroupService.getById(id);
+                } else {//新建
+                    group.setGroupId(0);
+                    group.setGroupCode(UUID.randomUUID().toString());
+                }
+                apiInterface.setData(group);
+                apiInterface.setError_code(1);
+            } catch (Exception e) {
+                //e.printStackTrace();
+                log.error("Group Load失败",e);
+                apiInterface.setError_code(90);
             }
         }
-        else
-        {
-            //conn.setStatus(1);
-            //conn.setCreateTime(new Date());
-            int count = this.iGroupService.getBaseMapper().insert(group);
-            apiInterface.setData(group);
-            if(count==0){
+        else {
+
+            try {
+                if (group.getGroupId() > 0) {
+                    group.setLastUpdateTime(Tools.formatDate(Tools.DateFormat_yyyyMMDDHHmmss));
+                    boolean b = this.iGroupService.updateById(group);
+                    this.quartzService.initByGroup();
+                    //model.addAttribute("ispost",true);
+                    apiInterface.setData(group);
+                    if (!b) {
+                        apiInterface.setError_code(500);
+                        apiInterface.setMessage("更新出错");
+                    }
+                } else {
+                    //conn.setStatus(1);
+                    //conn.setCreateTime(new Date());
+                    int count = this.iGroupService.getBaseMapper().insert(group);
+                    apiInterface.setData(group);
+                    if (count == 0) {
+                        apiInterface.setError_code(500);
+                        apiInterface.setMessage("添加出错");
+                    }
+                }
+            } catch (Exception e) {
+                //e.printStackTrace();
+                log.error("插入或更新失败",e);
                 apiInterface.setError_code(500);
                 apiInterface.setMessage("添加出错");
+
             }
         }
-        model.addAttribute("conn",group);
+        model.addAttribute("group",group);
         model.addAttribute("apiInterface",apiInterface);
         model.addAttribute("topNavBar","group");
         //System.out.println(request.getLocale());

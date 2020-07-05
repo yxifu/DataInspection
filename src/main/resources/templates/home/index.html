@@ -11,58 +11,49 @@
     </nav>-->
     <div class="jumbotron">
         <h1 class="display-4" th:text="#{home.info}"></h1>
-        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+        <!--<p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
         <hr class="my-4">
-        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>-->
         <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
     </div>
 
-    <p th:text="'Hello, ' + ${name} + '!'">3333</p>
     <div>
-        使用说明等信息
+        #Data Inspection(数据巡检)
+
+        ##介绍
+        ### 简介
+        查找错误数据，邮件提醒相关人员。
+
+        ### 背景介绍
+        - 工作中，数据难免有错误，总是收到用户反馈后才去处理，很被动。
+        - 为解决此问题，就写了定时查SQL发邮件的功能，提前发现问题数据。
+        - 此项目是为了实现简单灵活管理数据巡检而开发。
+
+        ### 功能说明
+        本项目利用SQL，检查数据是否有错误数据，然后发送邮件提醒。
+        主要功能：
+        - 配置巡检组
+        - 配置巡检项（SQL,支持数据库sqllite/mysql/oracle/sql server/）
+        - 配置触发器（定期执行，还每隔一段时间执行）
+        - 发送邮件（可以设置，有错误数据发送或固定发送）
+        - 支持中英双语（后台续完善英文）
+        ### 技术说明
+        - 使用 Spring boot 2.3.1 + thymeleaf + sqlite + bootstrap 4.4.1
+        - 使用sqllite，是为了减少数据库依赖，方便移值安装。
+
+
+        ##安装
+        ### JAR安装说明
+
+        ### Docker安装说明
+
+        ## 使用
+        ### 使用说明
+
+        ### 找回密码
+
     </div>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-        </tr>
-        <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-        </tr>
-        <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>the Bird</td>
-            <td>@twitter</td>
-        </tr>
-        </tbody>
-    </table>
-
-    <button type="button" class="btn btn-primary">Primary</button>
-    <button type="button" class="btn btn-secondary">Secondary</button>
-    <button type="button" class="btn btn-success">Success</button>
-    <button type="button" class="btn btn-danger">Danger</button>
-    <button type="button" class="btn btn-warning">Warning</button>
-    <button type="button" class="btn btn-info">Info</button>
-    <button type="button" class="btn btn-light">Light</button>
-    <button type="button" class="btn btn-dark">Dark</button>
-
-    <button type="button" class="btn btn-link">Link</button>
 </div>
 
 <script>

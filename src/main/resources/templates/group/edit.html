@@ -3,7 +3,7 @@
 <head th:include="common/head::head('Group Edit-Setting-DataInspection')"></head>
 <body>
 
-    <div class="container" th:if="${apiInterface == null || apiInterface.error_code>0}">
+    <div class="container" th:if="${apiInterface.error_code==1}">
         <form method="post">
             <input type="hidden" id="groupId" name="groupId" th:value="${group.groupId}">
             <div class="form-group row">
@@ -104,7 +104,7 @@
                 });
         }
     </script>
-    <script th:if="${apiInterface != null && apiInterface.error_code==0}">
+    <script th:if="${apiInterface.error_code==0}">
 
         top.layer.alert("成功",{icon:1},function () {
                 //console.log(1111);
@@ -114,7 +114,7 @@
                 //console.log(333333);
             });
     </script>
-    <script th:if="${apiInterface != null && apiInterface.error_code>0}">
+    <script th:if="${apiInterface != null && apiInterface.error_code>1}">
         //parent.layer.closeAll();
         layer.alert("保存失败",{icon:2});
     </script>
