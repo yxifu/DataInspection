@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/head::head('Conn Edit-Setting-DataInspection')"></head>
+<body>
+
+    <div class="container" th:if="${apiInterface == null || apiInterface.error_code>0}">
+        <form method="post">
+            <input type="hidden" id="connId" name="connId" th:value="${conn.connId}">
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="name" name="name" th:value="${conn.name}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="type" class="col-sm-2 col-form-label">Type</label>
+                <div class="col-sm-10">
+                    <select id="type" name="type" class="form-control">
+                        <option th:selected="${conn.type=='com.mysql.jdbc.Driver'}" value="com.mysql.jdbc.Driver" >MySql</option>
+                        <option th:selected="${conn.type=='Sql Server'}" >Sql Server</option>
+                        <option th:selected="${conn.type=='Oracle'}" >Oracle</option>
+                        <option th:selected="${conn.type=='org.postgresql.Driver'}" value="org.postgresql.Driver" >PostgreSQL</option>
+                        <option th:selected="${conn.type=='org.sqlite.JDBC'}" value="org.sqlite.JDBC">sqlite(org.sqlite.JDBC)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="connString" class="col-sm-2 col-form-label">Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="connString" name="connString" th:value="${conn.connString}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="username" class="col-sm-2 col-form-label">UserName</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="username" name="username" th:value="${conn.username}">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="password" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="password" name="password" th:value="${conn.password}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="remark" class="col-sm-2 col-form-label">Remark</label>
+                <div class="col-sm-10">
+                    <textarea id="remark" name="remark" th:text="${conn.remark}" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="text-center">
+                <a class="btn" onclick="click_test();">测试连接</a>
+                <button class="btn btn-primary">保存</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        function click_test() {
+            var data = $("form").serializeArray()
+            var newdata ={}
+            data.map(function(val,key){
+                newdata[val.name]=val.value;
+            })
+            $.post("testConn",
+                newdata
+                ,function(result){
+                    //console.log(result)
+                    if(result.data){
+                        alert("连接成功！")
+                    }else
+                    {
+                        alert("连接失败！"+result.message);
+                    }
+                    //$("span").html(result);
+                });
+        }
+    </script>
+    <script th:if="${apiInterface != null && apiInterface.error_code==0}">
+
+        top.layer.alert("成功",{icon:1},function () {
+                //console.log(1111);
+                top.window.location=top.window.location;
+                //console.log(222222);
+                top.layer.closeAll();
+                //console.log(333333);
+            });
+    </script>
+    <script th:if="${apiInterface != null && apiInterface.error_code>0}">
+        //parent.layer.closeAll();
+        layer.alert("保存失败",{icon:2});
+    </script>
+</body>
+</html>

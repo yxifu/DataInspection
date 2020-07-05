@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/head::head('Setting Edit-Setting-DataInspection')"></head>
+<body>
+
+    <div class="container" th:if="${apiInterface == null || apiInterface.error_code>0}">
+        <form method="post">
+            <input type="hidden" id="id" name="id" th:value="${setting.id}">
+            <div class="form-group row">
+                <label for="code" class="col-sm-2 col-form-label">Code</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="code" name="code" th:value="${setting.code}">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="value" class="col-sm-2 col-form-label">Value</label>
+                <div class="col-sm-10">
+                    <textarea id="value" name="value" th:text="${setting.value}" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="status" class="col-sm-2 col-form-label">status</label>
+                <div class="col-sm-10">
+                    <select id="status" name="status">
+                        <option th:selected="${1 == setting.status}" value="1">正常</option>
+                        <option th:selected="${0 == setting.status}" value="0">停用</option>
+                        <option th:selected="${-1 == setting.status}" value="-1">删除</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="remark" class="col-sm-2 col-form-label">Remark</label>
+                <div class="col-sm-10">
+                    <textarea id="remark" name="remark" th:text="${setting.remark}" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary">保存</button>
+            </div>
+        </form>
+    </div>
+    <script th:if="${apiInterface != null && apiInterface.error_code==0}">
+
+        top.layer.alert("成功",{icon:1},function () {
+                //top.window.location=top.window.location;
+                top.layer.closeAll();
+            });
+    </script>
+    <script th:if="${apiInterface != null && apiInterface.error_code>0}">
+        layer.alert("保存失败",{icon:2});
+    </script>
+</body>
+</html>

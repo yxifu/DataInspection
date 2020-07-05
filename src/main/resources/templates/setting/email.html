@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/head::head('Setting Edit-Setting-DataInspection')"></head>
+<body>
+
+    <div class="container" >
+        <form method="post">
+            <input type="hidden" id="id" name="id" th:value="${setting.id}">
+            <div class="form-group row">
+                <label for="code" class="col-sm-2 col-form-label">Code</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="code" name="code" th:value="${setting.code}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="mail_transport_protocol" class="col-sm-2 col-form-label">mail.transport.protocol</label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="mail_transport_protocol">
+                        <option>smtp</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="mail_host" class="col-sm-2 col-form-label">mail.host</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="mail_host">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="mail_smtp_port" class="col-sm-2 col-form-label">mail.smtp.port</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="mail_smtp_port">
+                </div>
+            </div>
+
+
+
+            <div class="form-group row">
+                <label for="email" class="col-sm-2 col-form-label">email</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="email">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="password" class="col-sm-2 col-form-label">password</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="password">
+                </div>
+            </div>
+            <div class="form-group row" style="display: none">
+                <label for="value" class="col-sm-2 col-form-label">Value</label>
+                <div class="col-sm-10">
+                    <textarea id="value" name="value" th:text="${setting.value}" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="form-group row" style="display: none">
+                <label for="status" class="col-sm-2 col-form-label">status</label>
+                <div class="col-sm-10">
+                    <select id="status" name="status">
+                        <option th:selected="${1 == setting.status}" value="1">正常</option>
+                        <option th:selected="${0 == setting.status}" value="0">停用</option>
+                        <option th:selected="${-1 == setting.status}" value="-1">删除</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="remark" class="col-sm-2 col-form-label">Remark</label>
+                <div class="col-sm-10">
+                    <textarea id="remark" name="remark" th:text="${setting.remark}" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="text-center">
+                <button onclick="checkEmail(true);return false;" class="btn btn-link">测试</button>
+                <button onclick="checkEmail(false);" class="btn btn-primary">保存</button>
+            </div>
+        </form>
+    </div>
+    <script>
+        $(function () {
+            initEmail();
+        })
+        function initEmail() {
+            var obj = JSON.parse($('#value').val());
+            $("#mail_transport_protocol").val(obj.mailTransportProtocol);
+            $("#mail_host").val(obj.mailHost);
+            $("#mail_smtp_port").val(obj.mailSmtpPort);
+            $("#email").val(obj.email);
+            $("#password").val(obj.password);
+        }
+
+        function checkEmail(isTest) {
+            if($('#mail_host').val()==''){
+                alert("mail_host不能为空");
+                return false;
+            } else if($('#mail_smtp_port').val()==''){
+                alert("mail_smtp_port不能为空");
+                return false;
+            } else if($('#email').val()==''){
+                alert("email不能为空");
+                return false;
+            } else if($('#password').val()==''){
+                alert("password不能为空");
+                return false;
+            }
+
+            var data = {
+                mailTransportProtocol:$('#mail_transport_protocol').val(),
+                mailHost:$('#mail_host').val(),
+                mailSmtpPort:$('#mail_smtp_port').val(),
+                email:$('#email').val(),
+                password:$('#password').val()
+            };
+            if(isTest) {
+                layer.load();
+                $.post("testEmail",
+                    data
+                    , function (result) {
+                        //console.log(result)
+                        if (result.data) {
+                            alert("成功！")
+                        } else {
+                            alert("失败！" + result.message);
+                        }
+                        layer.closeAll('loading');
+                    });
+            } else{
+              $('#value').val(JSON.stringify(data));
+            }
+        }
+
+    </script>
+    <script th:if="${apiInterface != null && apiInterface.error_code==0}">
+
+        top.layer.alert("成功",{icon:1},function () {
+                //top.window.location=top.window.location;
+                top.layer.closeAll();
+            });
+    </script>
+    <script th:if="${apiInterface != null && apiInterface.error_code>0}">
+        layer.alert("保存失败",{icon:2});
+    </script>
+</body>
+</html>

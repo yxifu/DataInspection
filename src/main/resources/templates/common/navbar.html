@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<nav th:fragment="navbar(topNavBar)" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">DataInspection</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+<!--        <div class="navbar-nav">
+            <a th:class="${topNavBar}=='home'? 'nav-item nav-link active':'nav-item nav-link'" class="nav-item nav-link active" href="/" th:text="#{home.home}">Home <span class="sr-only">(current)</span></a>
+            <a th:class="${topNavBar}=='group'? 'nav-item nav-link active':'nav-item nav-link'" class="nav-item nav-link" href="/group" th:text="#{home.group}">Group</a>
+            &lt;!&ndash;<a class="nav-item nav-link" href="/conns/">Conn</a>&ndash;&gt;
+            <a  th:class="${topNavBar}=='setting'? 'nav-item nav-link active':'nav-item nav-link'" class="nav-item nav-link" href="/setting" th:text="#{home.setting}">Setting</a>
+            &lt;!&ndash;<a class="nav-item nav-link" href="/setting" th:text="${topNavBar}">Setting</a>&ndash;&gt;
+
+        </div>-->
+        <ul class="navbar-nav">
+            <li th:class="${topNavBar}=='home'? 'nav-item nav-link active':'nav-item nav-link'"><a class="nav-link" href="/" th:text="#{home.home}"></a></li>
+            <li th:class="${topNavBar}=='monitor'? 'nav-item nav-link active':'nav-item nav-link'"><a class="nav-link" href="/monitor" th:text="#{home.monitor}"></a></li>
+            <li th:class="${topNavBar}=='group'? 'nav-item nav-link active':'nav-item nav-link'"><a class="nav-link" href="/group" th:text="#{home.group}"></a></li>
+            <li th:class="${topNavBar}=='setting'? 'nav-item nav-link active':'nav-item nav-link'"><a class="nav-link" href="/setting" th:text="#{home.setting}"></a></li>
+        </ul>
+        <ul class="navbar-nav ml-md-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{home.language}">
+                    #{home.language}
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/en" th:text="#{home.language.en}"></a>
+                    <a class="dropdown-item" href="/zh" th:text="#{home.language.zh}"></a>
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    </svg>
+                    <th:block th:text="${session.USER.userName}"></th:block>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="navbarDropdown2">
+                    <a class="dropdown-item" href="#" >修改密码</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/logout" >注销退出</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+</html>

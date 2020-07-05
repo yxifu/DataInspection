@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--<div th:text="${#httpServletRequest.requestURL}"></div>
+<div th:text="${#servletContext}"></div>-->
+<div class="list-group">
+    <a href="#" th:class="${#httpServletRequest.requestURL}=='/setting'? 'list-group-item list-group-item-action active':'list-group-item list-group-item-action'" class="list-group-item list-group-item-action active">设置</a>
+    <a href="/conn/list" class="list-group-item list-group-item-action">连接字符串管理</a>
+    <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
+    <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
+    <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
+    <a href="#" class="list-group-item list-group-item-action disabled" tabindex="-1" aria-disabled="true">Vestibulum at eros</a>
+</div>
+</html>

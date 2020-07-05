@@ -1,0 +1,12 @@
+spring:
+  thymeleaf:
+    cache: false #关闭缓存
+logging:
+  level:
+    root: info
+    com.yxifu.dataInspection.mapper: debug
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #org.apache.logging.stdout.StdOutImpl
+

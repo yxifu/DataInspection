@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        .form-control{width:100%;}
+
+        .card{border: solid 1px #eee;margin-bottom: 15px;}
+        .card .card-header{padding: 10px;
+            margin-bottom: 0px;
+            background-color: rgba(0, 0, 0, 0.03);
+            padding: 10px 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+        }
+        .card .card-body{padding: 10px;}
+        .card.bg-warning{ background-color: #F7BB07; color: #FFFFFF;}
+        .card.bg-danger{ background-color: #D53343; color: #FFFFFF;}
+
+        table { border-collapse: collapse; }
+        .table{width:100%;}
+        .table th { text-align: left;}
+        .table-bordered { border: 1px solid #dee2e6; }
+        .table-bordered td, .table-bordered th { border: 1px solid #dee2e6; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="card">
+        <h5 class="card-header">Base Info</h5>
+        <div class="card-body">
+
+            <form method="post">
+                <input type="hidden" id="groupId" name="groupId" th:value="${group.groupId}">
+                <div class="form-group row">
+                    <label for="name" class="col-sm-3 col-form-label">Name</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="name" name="name" th:value="${group.name}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="remark" class="col-sm-3 col-form-label">Remark</label>
+                    <div class="col-sm-9">
+                        <textarea id="remark" name="remark" th:text="${group.remark}" class="form-control"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="card" style="margin-top: 15px;">
+        <h5 class="card-header">结果</h5>
+        <div class="card-body" id="resultBody">
+            <div class="card  mb-3" th:each="itemResult,itemResultStat:${groupResultBean.itemResultList}" th:classappend="${itemResult.exception!=null?'text-white bg-warning':(itemResult.exception==null && itemResult.data!=null && itemResult.data.size()>0?'text-white bg-danger':'')}">
+                <div class="card-header"><span th:text="${itemResultStat.index+1}"></span>. <span th:text="${itemResult.item.title}"></span>
+                </div>
+                <div class="card-body">
+                    <textarea th:text="${itemResult.item.sql}"  class="form-control"></textarea>
+                    <textarea th:text="${itemResult.exception}"  th:if="${itemResult.exception!=null}" class="form-control"></textarea>
+
+                    <table style="border-collapse: collapse;" class="table  table-striped table-bordered" th:if="${itemResult.exception==null && itemResult.data!=null && itemResult.data.size()>0}">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th th:each="th,thStat:${itemResult.data[0]}" th:text="${th.key}"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="data,dataStat  : ${itemResult.data}">
+                                <th th:text="${dataStat.index+1}"></th>
+                                <td th:each="td,tdStat:${data}" th:text="${data[td.key]}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

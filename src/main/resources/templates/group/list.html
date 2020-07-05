@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/head::head('Group-DataInspection')"></head>
+<body>
+<div th:replace="common/navbar::navbar(${topNavBar})"></div>
+<div class="container">
+
+<h3>Group</h3>
+    <button class="btn btn-primary" onclick="click_edit(0);return false;" role="button">
+        <svg class="bi bi-plus" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
+            <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
+        </svg>
+        Add</button>
+
+<table class="table  table-striped table-bordered">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Code</th>
+        <th>Name</th>
+        <th>isSend</th>
+        <th>isSendEmail</th>
+        <th>emails</th>
+        <th>SendCondition</th>
+        <th>Remark</th>
+        <th>lastUpdateTime</th>
+        <th>Status</th>
+        <th>Edit</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr th:each="group,groupStat  : ${groupList}">
+            <th th:text="${groupStat.index+1}">状态变量：index</th>
+            <td th:text="${group.groupCode}"></td>
+            <td th:text="${group.name}"></td>
+            <td th:text="${group.isSend}"></td>
+            <td th:text="${group.isSendEmail}"></td>
+            <td th:utext="${#strings.replace(group.emails,';',';<br>')}"></td>
+            <td th:text="${group.triggerCondition==0?'有数据执行':'固定执行'}">Onions</td>
+            <td th:text="${group.remark}"></td>
+            <td th:text="${group.lastUpdateTime}"></td>
+            <td><span th:if="${group.status==0}">停用</span></td>
+            <td th:object="${group}" >
+                <a th:onclick="|click_edit(${group.groupId});return false;|" href="#">Edit</a> | <a
+                    th:href="@{'/group/view?id='+${group.groupId}}" target="_blank" >View</a> | <a
+                    th:href="@{'/group/result?id='+${group.groupId}}" target="_blank" >Result</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<script>
+    function click_edit(id) {
+        //alert(id);
+        var url = "/group/edit?id="+id;
+
+        window.alyer_index = layer.open({
+            type: 2,
+            area: ['700px', '450px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: url,
+            title: id==0?'New Group':'Edit Group'
+        });
+    }
+    function click_view(id) {
+        var url = "/group/view?id="+id;
+        window.open(url,'_blank');
+    }
+
+    function fun_reload() {
+        window.location=window.location;
+
+    }
+</script>
+</body>
+</html>

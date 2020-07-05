@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/head::head('Monitor-DataInspection')"></head>
+<body>
+<div th:replace="common/navbar::navbar(${topNavBar})"></div>
+<div class="container">
+
+    <div class="p-3 text-right">
+    <button class="btn btn-primary" onclick="fun_reload();return false;" role="button">
+        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-clockwise" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M3.17 6.706a5 5 0 0 1 7.103-3.16.5.5 0 1 0 .454-.892A6 6 0 1 0 13.455 5.5a.5.5 0 0 0-.91.417 5 5 0 1 1-9.375.789z"/>
+            <path fill-rule="evenodd" d="M8.147.146a.5.5 0 0 1 .707 0l2.5 2.5a.5.5 0 0 1 0 .708l-2.5 2.5a.5.5 0 1 1-.707-.708L10.293 3 8.147.854a.5.5 0 0 1 0-.708z"/>
+        </svg>
+        Reload</button>
+    </div>
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th></th>
+        <!--<th>Code</th>-->
+        <th>Name</th>
+        <!--<th>isSend</th>-->
+        <th>isSendEmail</th>
+        <th>emails</th>
+        <th>triggerCondition</th>
+        <th>Remark</th>
+        <th>lastUpdateTime</th>
+        <!--<th>Status</th>-->
+        <th>Edit</th>
+    </tr>
+    </thead>
+    <tbody>
+
+
+    <th:block th:each="monitorBean,monitorBeanStat  : ${monitorBeanList}" >
+
+        <tr>
+            <th th:text="${monitorBeanStat.count}" rowspan="2">状态变量：index</th>
+            <!--<td th:text="${monitorBean.group.groupCode}">Onions</td>-->
+            <td th:text="${monitorBean.group.name}" rowspan="2">Onions</td>
+            <!--<td th:text="${monitorBean.group.isSend}">Onions</td>-->
+            <td th:text="${monitorBean.group.isSendEmail}">Onions</td>
+            <td th:text="${monitorBean.group.emails}">Onions</td>
+            <td th:text="${monitorBean.group.triggerCondition}">Onions</td>
+            <td th:text="${monitorBean.group.remark}">Onions</td>
+            <td th:text="${monitorBean.group.lastUpdateTime}">Onions</td>
+            <!--<td><span th:if="${monitorBean.group.status==0}">停用</span></td>-->
+            <td th:object="${monitorBean.group}" >
+                <a th:onclick="|click_edit(${monitorBean.group.groupId});return false;|" href="#">Edit</a> | <a
+                    th:href="@{'/group/view?id='+${monitorBean.group.groupId}}" target="_blank" >View</a> | <a
+                    th:href="@{'/group/result?id='+${monitorBean.group.groupId}}" target="_blank" >Result</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5">
+
+                <table class="table table-dark table-sm table-striped table-bordered table-hover" style="margin-bottom: 0px;">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>触发器名称</th>
+                        <th>上次执行时间</th>
+                        <th>下次执行时间</th>
+                        <th>说明</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="monitorTriggerBean,monitorTriggerBeanStat  : ${monitorBean.monitorTriggerBeanList}">
+                            <td th:text="${monitorTriggerBeanStat.count}"></td>
+                            <td th:text="${monitorTriggerBean.triggerFullName}"></td>
+                            <td th:text="${monitorTriggerBean.previousFireTime}"></td>
+                            <td th:text="${monitorTriggerBean.nextFireTime}"></td>
+                            <td th:text="${monitorTriggerBean.toExplain()}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td>
+                <a  th:jobName="${monitorBean.jobFullName}" onclick="click_addTrigger(this.getAttribute('jobName'))">立即执行</a>
+            </td>
+        </tr>
+    </th:block>
+
+    <tr th:if=" ${monitorBeanList.size()==0}">
+        <td colspan="10">未查到正在执行的触发器</td>
+    </tr>
+    </tbody>
+</table>
+</div>
+<script>
+    function click_edit(id) {
+        //alert(id);
+        var url = "/group/edit?id="+id;
+
+        window.alyer_index = layer.open({
+            type: 2,
+            area: ['700px', '450px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: url,
+            title: id==0?'New Group':'Edit Group'
+        });
+    }
+    function click_view(id) {
+        var url = "/group/view?id="+id;
+        window.open(url,'_blank');
+    }
+
+    function fun_reload() {
+        window.location=window.location;
+
+    }
+
+    function addTrigger(jobName) {
+        alert(jobName);
+    }
+    function click_addTrigger(jobName) {
+        layer.confirm('确定要立即执行吗？', {btn: ['确定', '取消'], title: "提示"}, function () {
+            var url = "/monitor/addTrigger";
+            $.ajax({
+                type: "post",
+                url: url,
+                data: {'jobName':jobName},
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data) {
+                        layer.alert('成功', { title:'提示', icon: 1, end: fun_reload});
+                    } else {
+                        layer.alert("失败", {title:'提示',icon: 2});
+                    }
+                }
+            });
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+server:
+  port: 9900
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    #url: jdbc:sqlite:D:/temp/SQLiteDB/DataInspection.sqlite3
+    url: jdbc:sqlite:${user.dir}\DataInspection.sqlite3
+    username:
+    password:
+  messages:
+    basename: i18n/messages
+datainspection:
+  logdir: ${user.dir}\log\
+
+

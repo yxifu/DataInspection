@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="common/head::head('Group View-Setting-DataInspection')"></head>
+<body>
+
+    <div class="container">
+
+        <div class="card">
+            <h5 class="card-header">Base Info</h5>
+            <div class="card-body">
+
+                <form method="post">
+                    <input type="hidden" id="groupId" name="groupId" th:value="${group.groupId}">
+                    <div class="form-group row">
+                        <label for="name" class="col-sm-3 col-form-label">Name</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="name" name="name" th:value="${group.name}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="groupCode" class="col-sm-3 col-form-label">groupCode</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="groupCode" name="groupCode" th:value="${group.groupCode}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label  class="col-sm-3 col-form-label">isSend</label>
+                        <div class="col-sm-9">
+
+                            <select id="isSend" name="isSend" class="form-control">
+                                <option th:selected="${group.isSend=='0'}" value="0" >否</option>
+                                <option th:selected="${group.isSend=='1'}" value="1" >是</option>
+                            </select>
+                            <!--<input type="text" class="form-control" id="isSend" name="isSend" th:value="${group.isSend}">-->
+                            <!--<input class="form-check-input" type="checkbox" value="1" id="isSend" name="isSend">
+                              <label class="form-check-label" for="isSend">
+                                  isSend
+                              </label>-->
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label  class="col-sm-3 col-form-label">isSendEmail</label>
+                        <div class="col-sm-9">
+                            <select id="isSendEmail" name="isSendEmail" class="form-control">
+                                <option th:selected="${group.isSendEmail=='0'}" value="0" >否</option>
+                                <option th:selected="${group.isSendEmail=='1'}" value="1" >是</option>
+                            </select>
+                            <!--<input type="text" class="form-control" id="isSend" name="isSend" th:value="${group.isSend}">-->
+                            <!--<input class="form-check-input" type="checkbox" value="1" id="isSendEmail" name="isSendEmail">
+                            <label class="form-check-label" for="isSendEmail">
+                                isSendEmail
+                            </label>-->
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="groupCode" class="col-sm-3 col-form-label">emails</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="emails" name="emails" th:value="${group.emails}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="triggerCondition" class="col-sm-3 col-form-label">triggerCondition</label>
+                        <div class="col-sm-9">
+                            <select id="triggerCondition" name="triggerCondition" class="form-control">
+                                <option th:selected="${group.triggerCondition=='0'}" value="0" >默认(只有查询到数据，才触发发送事件)</option>
+                                <option th:selected="${group.triggerCondition=='1'}" value="1" >发送</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="remark" class="col-sm-3 col-form-label">Remark</label>
+                        <div class="col-sm-9">
+                            <textarea id="remark" name="remark" th:text="${group.remark}" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 15px;">
+            <h5 class="card-header">触发器</h5>
+            <div class="card-body">
+                <a href="#" class="btn btn-primary" onclick="click_trigger_edit(0);return false;">添加</a>
+
+                <table class="table  table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>title</th>
+                        <th>triggerType</th>
+                        <th>corn</th>
+                        <th>interval</th>
+                        <th>Remark</th>
+                        <th>LastUpdateTime</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="trigger,triggerStat  : ${triggerList}">
+                        <th th:text="${triggerStat.index+1}">状态变量：index</th>
+                        <td th:text="${trigger.title}">Onions</td>
+                        <td th:text="${trigger.triggerType}">Onions</td>
+                        <td th:text="${trigger.corn}">Onions</td>
+                        <td th:text="${trigger.interval}">Onions</td>
+                        <td th:text="${trigger.remark}">Onions</td>
+                        <td th:text="${trigger.lastUpdateTime}">Onions</td>
+                        <td><span th:if="${trigger.status==0}">停用</span></td>
+                        <td th:object="${trigger}" >
+                            <a th:onclick="|click_trigger_edit(${trigger.id})|" >Edit</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 15px;">
+            <h5 class="card-header">检查项</h5>
+            <div class="card-body">
+                <!--<h5 class="card-title">Special title treatment</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                --><a href="#" class="btn btn-primary" onclick="click_item_edit(0);return false;">添加</a>
+
+                <table class="table  table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>title</th>
+                        <th>connId</th>
+                        <th>sql</th>
+                        <th>Remark</th>
+                        <th>lastUpdateTime</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item,itemStat  : ${itemList}">
+                        <th th:text="${itemStat.index+1}">状态变量：index</th>
+                        <td th:text="${item.title}">Onions</td>
+                        <td th:text="${item.connId}">Onions</td>
+                        <td th:text="${item.sql}">Onions</td>
+                        <td th:text="${item.remark}">Onions</td>
+                        <td th:text="${item.lastUpdateTime}">Onions</td>
+                        <td><span th:if="${item.status==0}">停用</span></td>
+                        <td th:object="${item}" >
+                            <a th:onclick="|click_item_edit(${item.id})|" >Edit</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        function click_item_edit(id) {
+            //alert(id);
+            var url = "/item/edit?groupId="+$("#groupId").val()+"&id="+id;
+
+            window.alyer_index = layer.open({
+                type: 2,
+                area: ['700px', '450px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url,
+                title: id==0?'New Item':'Edit Item'
+            });
+        }
+
+
+        function click_trigger_edit(id) {
+            //alert(id);
+            var url = "/trigger/edit?groupId="+$("#groupId").val()+"&id="+id;
+
+            window.alyer_index = layer.open({
+                type: 2,
+                area: ['700px', '450px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url,
+                title: id==0?'New Trigger':'Edit Trigger'
+            });
+        }
+        function click_test() {
+            var data = $("form").serializeArray()
+            var newdata ={}
+            data.map(function(val,key){
+                newdata[val.name]=val.value;
+            })
+            $.post("testConn",
+                newdata
+                ,function(result){
+                    //console.log(result)
+                    if(result.data){
+                        alert("连接成功！")
+                    }else
+                    {
+                        alert("连接失败！"+result.message);
+                    }
+                    //$("span").html(result);
+                });
+        }
+    </script>
+</body>
+</html>
