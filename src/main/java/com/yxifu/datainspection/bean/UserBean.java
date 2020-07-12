@@ -10,4 +10,6 @@ import lombok.Data;
 public class UserBean {
     String userName;
     String password;
+    String oldPassword;
+    String confirmPassword;
 }

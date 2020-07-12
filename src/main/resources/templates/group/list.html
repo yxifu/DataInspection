@@ -5,7 +5,7 @@
 <div th:replace="common/navbar::navbar(${topNavBar})"></div>
 <div class="container">
 
-<h3>Group</h3>
+<h3 th:text="#{home.group}"></h3>
     <button class="btn btn-primary" onclick="click_edit(0);return false;" role="button">
         <svg class="bi bi-plus" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
@@ -17,25 +17,32 @@
     <thead>
     <tr>
         <th></th>
-        <th>Code</th>
-        <th>Name</th>
-        <th>isSend</th>
-        <th>isSendEmail</th>
-        <th>emails</th>
-        <th>SendCondition</th>
-        <th>Remark</th>
-        <th>lastUpdateTime</th>
-        <th>Status</th>
-        <th>Edit</th>
+        <!--<th>Code</th>-->
+        <th th:text="#{group.name}">Name</th>
+        <th th:text="#{group.isSend}">isSend</th>
+        <th th:text="#{group.isSendEmail}">isSendEmail</th>
+        <th th:text="#{group.emails}">emails</th>
+        <th th:text="#{group.sendCondition}">SendCondition</th>
+        <th th:text="#{group.remark}">Remark</th>
+        <th th:text="#{group.lastUpdateTime}">lastUpdateTime</th>
+        <th th:text="#{group.status}">Status</th>
+        <th th:text="#{group.edit}">Edit</th>
     </tr>
     </thead>
     <tbody>
         <tr th:each="group,groupStat  : ${groupList}">
             <th th:text="${groupStat.index+1}">状态变量：index</th>
-            <td th:text="${group.groupCode}"></td>
+            <!--<td th:text="${group.groupCode}"></td>-->
             <td th:text="${group.name}"></td>
-            <td th:text="${group.isSend}"></td>
-            <td th:text="${group.isSendEmail}"></td>
+            <td>
+                <span th:if="${group.isSend==1}" th:text="#{common.yes}"></span>
+                <span th:if="${group.isSend==0}" th:text="#{common.no}"></span>
+            </td>
+            <td>
+                <span th:if="${group.isSendEmail==1}" th:text="#{common.yes}"></span>
+                <span th:if="${group.isSendEmail==0}" th:text="#{common.no}"></span>
+            </td>
+            <!--<td th:text="${group.isSendEmail}"></td>-->
             <td th:utext="${#strings.replace(group.emails,';',';<br>')}"></td>
             <td th:text="${group.triggerCondition==0?'有数据执行':'固定执行'}">Onions</td>
             <td th:text="${group.remark}"></td>

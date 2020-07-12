@@ -1,9 +1,13 @@
 package com.yxifu.datainspection.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yxifu.datainspection.bean.ApiInterface;
 import com.yxifu.datainspection.bean.UserBean;
 import com.yxifu.datainspection.entity.Setting;
+import com.yxifu.datainspection.entity.Trigger;
+import com.yxifu.datainspection.service.ISettingService;
 import com.yxifu.datainspection.util.ConstantUtils;
+import com.yxifu.datainspection.util.MD5Util;
 import com.yxifu.datainspection.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +29,9 @@ public class HomeController {
 
     @Autowired
     private LocaleResolver localeResolver;
+
+    @Autowired
+    ISettingService iSettingService;
 
     @RequestMapping("/")
     public String index(Model model, HttpServletRequest request, HttpServletResponse response){
@@ -54,10 +61,30 @@ public class HomeController {
         if(userBean.getUserName()==null && userBean.getPassword()==null){
             userBean.setUserName("admin");
         } else {
-            if("admin".equals(userBean.getUserName()) && "admin".equals(userBean.getPassword())){
+
+            QueryWrapper<Setting> queryWapperSetting = new QueryWrapper<>();
+            queryWapperSetting.lambda().eq(Setting::getCode,"admin_password").eq(Setting::getStatus,1);
+            Setting setting = this.iSettingService.getOne(queryWapperSetting);
+            boolean checkDefaultPassword =true;
+            if(setting!=null && setting.getValue()!=null && !"".equals(setting.getValue())  ){
+                checkDefaultPassword=false;
+            }
+
+            if(!checkDefaultPassword){
+                if("admin".equals(userBean.getUserName()) &&
+                        MD5Util.verify(userBean.getPassword(),setting.getValue())
+                ){
+                    userBean.setPassword("");
+                    request.getSession().setAttribute(ConstantUtils.USER_SESSION_KEY,userBean);
+                    return "redirect:/";
+                } else {
+                    apiInterface.setError_code(300);
+                    apiInterface.setMessage("账号和密码不正确！");
+                }
+            } else  if("admin".equals(userBean.getUserName()) && "admin".equals(userBean.getPassword())){
                 userBean.setPassword("");
                 request.getSession().setAttribute(ConstantUtils.USER_SESSION_KEY,userBean);
-                return "redirect:/";
+                return "redirect:/setting/modifyPassword";
             } else {
                 apiInterface.setError_code(300);
                 apiInterface.setMessage("账号和密码不正确！");
@@ -69,6 +96,8 @@ public class HomeController {
         model.addAttribute("apiInterface",apiInterface);
         return "home/login";
     }
+
+
 
     @RequestMapping("/logout")
     public String logout(Model model, HttpServletRequest request, HttpServletResponse response){
@@ -83,17 +112,25 @@ public class HomeController {
     @RequestMapping("/zh")
     public String zh(Model model, HttpServletRequest request, HttpServletResponse response){
         localeResolver.setLocale(request,response, Locale.CHINA);
-        System.out.println(request.getLocale());
-        //return "切换成中文";
-        return "redirect:/";
+        if(request.getHeader("referer")!=null && !"".equals(request.getHeader("referer")) ){
+            return "redirect:"+request.getHeader("referer");
+        } else {
+            //return "index";
+            return "redirect:/";
+        }
     }
 
 
     @RequestMapping("/en")
     public String en(Model model, HttpServletRequest request, HttpServletResponse response){
         localeResolver.setLocale(request,response, Locale.ENGLISH);
-        System.out.println(request.getLocale());
-        //return "index";
-        return "redirect:/";
+        //System.out.println(request.getLocale());
+
+        if(request.getHeader("referer")!=null && !"".equals(request.getHeader("referer")) ){
+            return "redirect:"+request.getHeader("referer");
+        } else {
+            //return "index";
+            return "redirect:/";
+        }
     }
 }
