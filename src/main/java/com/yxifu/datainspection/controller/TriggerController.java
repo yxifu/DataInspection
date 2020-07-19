@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,13 +47,13 @@ public class TriggerController {
         }
 
         model.addAttribute("trigger",trigger);
-        model.addAttribute("apiInterface",null);
         return "trigger/edit";
     }
 
 
+    @ResponseBody
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
-    public String index(Model model, Trigger trigger
+    public ApiInterface<Trigger> index(Model model, Trigger trigger
             , HttpServletRequest request, HttpServletResponse response){
         int id= trigger.getId();
         ApiInterface<Trigger> apiInterface = new ApiInterface<>();
@@ -75,8 +76,6 @@ public class TriggerController {
             }
         }
         this.quartzService.initByGroup();
-        model.addAttribute("trigger",trigger);
-        model.addAttribute("apiInterface",apiInterface);
-        return "trigger/edit";
+        return apiInterface;
     }
 }

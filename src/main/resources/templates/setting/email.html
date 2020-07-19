@@ -1,61 +1,67 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:include="common/head::head('Setting Edit-Setting-DataInspection')"></head>
-<body>
-
-    <div class="container" >
-        <form method="post">
+<head>
+    <th:block th:replace="common/head::head('Setting-DataInspection')"></th:block>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!--header-->
+    <div th:replace="common/navbar::navbar(${topNavBar})"></div>
+    <!--END header-->
+    <!--sider-->
+    <div th:replace="common/settingMenu"></div>
+    <!--END sider-->
+    <!--body-->
+    <div class="layui-body" style="padding: 10px;">
+        <form  class="layui-form">
             <input type="hidden" id="id" name="id" th:value="${setting.id}">
-            <div class="form-group row">
-                <label for="code" class="col-sm-2 col-form-label">Code</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="code" name="code" th:value="${setting.code}">
+            <div class="layui-form-item layui-hide">
+                <label for="code" class="layui-form-label">Code</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" id="code" name="code" th:value="${setting.code}">
                 </div>
             </div>
-            <div class="form-group row">
-                <label for="mail_transport_protocol" class="col-sm-2 col-form-label">mail.transport.protocol</label>
-                <div class="col-sm-10">
-                    <select class="form-control" id="mail_transport_protocol">
+            <div class="layui-form-item">
+                <label for="mail_transport_protocol" class="layui-form-label">mail.transport.protocol</label>
+                <div class="layui-input-block">
+                    <select class="layui-input" id="mail_transport_protocol">
                         <option>smtp</option>
                     </select>
                 </div>
             </div>
-            <div class="form-group row">
-                <label for="mail_host" class="col-sm-2 col-form-label">mail.host</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="mail_host">
+            <div class="layui-form-item">
+                <label for="mail_host" class="layui-form-label">mail.host</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" id="mail_host" name="mail_host"  lay-verify="myRequire">
                 </div>
             </div>
-            <div class="form-group row">
-                <label for="mail_smtp_port" class="col-sm-2 col-form-label">mail.smtp.port</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="mail_smtp_port">
+            <div class="layui-form-item">
+                <label for="mail_smtp_port" class="layui-form-label">mail.smtp.port</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" id="mail_smtp_port" name="mail_smtp_port"  lay-verify="myRequire">
                 </div>
             </div>
-
-
-
-            <div class="form-group row">
-                <label for="email" class="col-sm-2 col-form-label">email</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="email">
+            <div class="layui-form-item">
+                <label for="email" class="layui-form-label">email</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" id="email" name="email"  lay-verify="myRequire">
                 </div>
             </div>
-            <div class="form-group row">
-                <label for="password" class="col-sm-2 col-form-label">password</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="password">
+            <div class="layui-form-item">
+                <label for="password" class="layui-form-label">password</label>
+                <div class="layui-input-block">
+                    <input type="password" class="layui-input" id="password">
                 </div>
             </div>
-            <div class="form-group row" style="display: none">
-                <label for="value" class="col-sm-2 col-form-label">Value</label>
-                <div class="col-sm-10">
-                    <textarea id="value" name="value" th:text="${setting.value}" class="form-control"></textarea>
+            <div class="layui-form-item" style="display: none">
+                <label for="value" class="layui-form-label">Value</label>
+                <div class="layui-input-block">
+                    <textarea id="value" name="value" th:text="${setting.value}" class="layui-input"></textarea>
                 </div>
             </div>
-            <div class="form-group row" style="display: none">
-                <label for="status" class="col-sm-2 col-form-label">status</label>
-                <div class="col-sm-10">
+            <div class="layui-form-item" style="display: none">
+                <label for="status" class="layui-form-label">status</label>
+                <div class="layui-input-block">
                     <select id="status" name="status">
                         <option th:selected="${1 == setting.status}" value="1">正常</option>
                         <option th:selected="${0 == setting.status}" value="0">停用</option>
@@ -63,18 +69,85 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group row">
-                <label for="remark" class="col-sm-2 col-form-label">Remark</label>
-                <div class="col-sm-10">
-                    <textarea id="remark" name="remark" th:text="${setting.remark}" class="form-control"></textarea>
+            <div class="layui-form-item">
+                <label for="remark" class="layui-form-label">Remark</label>
+                <div class="layui-input-block">
+                    <textarea id="remark" name="remark" th:text="${setting.remark}" class="layui-textarea"></textarea>
                 </div>
             </div>
-            <div class="text-center">
+<!--            <div class="text-center">
                 <button onclick="checkEmail(true);return false;" class="btn btn-link">测试</button>
                 <button onclick="checkEmail(false);" class="btn btn-primary">保存</button>
+            </div>-->
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-primary" lay-submit lay-filter="testEmail">测试邮箱</button>
+                    <button class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
+                </div>
             </div>
         </form>
+        <script>
+            //Demo
+            layui.use('form', function(){
+                var form = layui.form;
+                //验证
+                form.verify({
+                    myRequire: function(value, item) { //value：表单的值、item：表单的DOM对象
+                        if(value.length==0){
+                            return '不能为空';
+                        }
+                    }
+                });
+
+                //监听测试
+                form.on('submit(testEmail)', function(data){
+                    //console.log('111111');
+                    var cv = checkValue();
+                    if(cv) {
+                        var vd = createValue();
+                        $.post('/setting/testEmail', vd, function (returnData) {
+                            // console.log(returnData);
+                            if (returnData.error_code == 0 && returnData.data) {
+                                layer.alert("测试成功！", {
+                                    title: '测试', icon: 1, end: function () {
+                                    }
+                                });
+                            } else {
+                                layer.alert("测试失败：" + returnData.message, {title: '测试', icon: 2});
+                            }
+                        });
+                    }
+                    return false;
+                });
+                //监听提交
+                form.on('submit(formSubmit)', function(data){
+                    //layer.msg(JSON.stringify(data.field));
+                    var cv = checkValue();
+                    if(cv) {
+                        var vd = createValue();
+                        $('#value').val(JSON.stringify(vd));
+                        $.post('/setting/email', data.field, function (returnData) {
+                            // console.log(returnData);
+                            if (returnData.error_code == 0) {
+                                layer.alert("保存成功！", {
+                                    title: '保存', icon: 1, end: function () {
+                                    }
+                                });
+                            } else {
+                                layer.alert("保存失败：" + returnData.message, {title: '保存', icon: 2});
+                            }
+                        });
+                    }
+                    return false;
+                });
+            });
+        </script>
     </div>
+    <!--END body-->
+    <!--footer-->
+    <div th:replace="common/footer"></div>
+    <!--END footer-->
+</div>
     <script>
         $(function () {
             initEmail();
@@ -87,7 +160,35 @@
             $("#email").val(obj.email);
             $("#password").val(obj.password);
         }
+        function checkValue() {
+            if ($('#mail_host').val() == '') {
+                alert("mail_host不能为空");
+                return false;
+            } else if ($('#mail_smtp_port').val() == '') {
+                alert("mail_smtp_port不能为空");
+                return false;
+            } else if ($('#email').val() == '') {
+                alert("email不能为空");
+                return false;
+            } else if ($('#password').val() == '') {
+                alert("password不能为空");
+                return false;
+            }
+            return true;
+        }
 
+        function createValue() {
+            var data = {
+                mailTransportProtocol:$('#mail_transport_protocol').val(),
+                mailHost:$('#mail_host').val(),
+                mailSmtpPort:$('#mail_smtp_port').val(),
+                email:$('#email').val(),
+                password:$('#password').val()
+            };
+            return data;
+        }
+
+/*
         function checkEmail(isTest) {
             if($('#mail_host').val()==''){
                 alert("mail_host不能为空");
@@ -126,18 +227,8 @@
             } else{
               $('#value').val(JSON.stringify(data));
             }
-        }
+        }*/
 
-    </script>
-    <script th:if="${apiInterface != null && apiInterface.error_code==0}">
-
-        top.layer.alert("成功",{icon:1},function () {
-                //top.window.location=top.window.location;
-                top.layer.closeAll();
-            });
-    </script>
-    <script th:if="${apiInterface != null && apiInterface.error_code>0}">
-        layer.alert("保存失败",{icon:2});
     </script>
 </body>
 </html>

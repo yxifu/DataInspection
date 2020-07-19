@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,8 +61,9 @@ public class ItemController {
     }
 
 
+    @ResponseBody
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
-    public String index(Model model, Item item
+    public ApiInterface<Item> index(Model model, Item item
             , HttpServletRequest request, HttpServletResponse response){
         int id= item.getId();
         ApiInterface<Item> apiInterface = new ApiInterface<>();
@@ -83,13 +85,8 @@ public class ItemController {
                 apiInterface.setMessage("添加出错");
             }
         }
-        QueryWrapper<Conn> queryWapperTrigger = new QueryWrapper<>();
-        queryWapperTrigger.lambda().eq(Conn::getStatus,1);
-        List<Conn> connList = this.iConnService.list(queryWapperTrigger);
 
-        model.addAttribute("item",item);
-        model.addAttribute("connList",connList);
-        model.addAttribute("apiInterface",apiInterface);
-        return "item/edit";
+
+        return apiInterface;
     }
 }

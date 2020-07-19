@@ -1,13 +1,29 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<!--<div th:text="${#httpServletRequest.requestURL}"></div>
-<div th:text="${#servletContext}"></div>-->
-<div class="list-group">
-    <a href="#" th:class="${#httpServletRequest.requestURL}=='/setting'? 'list-group-item list-group-item-action active':'list-group-item list-group-item-action'" class="list-group-item list-group-item-action active">设置</a>
-    <a href="/conn/list" class="list-group-item list-group-item-action">连接字符串管理</a>
-    <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
-    <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
-    <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
-    <a href="#" class="list-group-item list-group-item-action disabled" tabindex="-1" aria-disabled="true">Vestibulum at eros</a>
+<div class="layui-side layui-bg-black">
+    <div class="layui-side-scroll">
+        <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+        <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+            <li class="layui-nav-item layui-nav-itemed">
+                <a class="" href="javascript:;">基础设置</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/setting/email">邮件发送设置</a></dd>
+                    <dd><a href="/conn/list">连接字符串设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item layui-nav-itemed">
+                <a href="javascript:;">用户设置</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/setting/modifyPassword">修改密码</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item layui-nav-itemed">
+                <a href="javascript:;">其它</a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;">关于</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
 </div>
 </html>

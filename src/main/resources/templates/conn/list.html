@@ -1,44 +1,58 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:include="common/head::head('Conn-Setting-DataInspection')"></head>
-<body>
-<div th:replace="common/navbar::navbar(${topNavBar})"></div>
-<div class="container">
+<head>
+    <th:block th:replace="common/head::head('Setting-DataInspection')"></th:block>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!--header-->
+    <div th:replace="common/navbar::navbar(${topNavBar})"></div>
+    <!--END header-->
+    <!--sider-->
+    <div th:replace="common/settingMenu"></div>
+    <!--END sider-->
+    <!--body-->
+    <div class="layui-body" style="padding: 10px;">
 
-<h3>Conn</h3>
-    <button class="btn btn-primary" onclick="click_edit(0);return false;" role="button">
-        <svg class="bi bi-plus" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
-            <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
-        </svg>
-        Add</button>
 
-<table class="table  table-striped table-bordered">
-    <thead>
-    <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Type</th>
-        <th>ConnString</th>
-        <th>Username</th>
-        <th>Remark</th>
-        <th>lastUpdateTime</th>
-        <th>Edit</th>
-    </tr>
-    </thead>
-    <tbody>
-        <tr th:each="conn,connStat  : ${connlist}">
-            <th th:text="${connStat.index+1}">状态变量：index</th>
-            <td th:text="${conn.name}">Onions</td>
-            <td th:text="${conn.type}">Onions</td>
-            <td th:text="${conn.connString}">Onions</td>
-            <td th:text="${conn.username}">Onions</td>
-            <td th:text="${conn.remark}">Onions</td>
-            <td th:text="${conn.lastUpdateTime}">Onions</td>
-            <td th:object="${conn}" th:onclick="|click_edit(${conn.connId})|"><a >Edit</a></td>
-        </tr>
-    </tbody>
-</table>
+        <button class="layui-btn" onclick="click_edit(0);return false;" role="button">
+            <svg class="bi bi-plus" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
+                <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
+            </svg>
+            Add</button>
+
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>ConnString</th>
+                <th>Username</th>
+                <th>Remark</th>
+                <th>lastUpdateTime</th>
+                <th>Edit</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="conn,connStat  : ${connlist}">
+                    <th th:text="${connStat.index+1}">状态变量：index</th>
+                    <td th:text="${conn.name}">Onions</td>
+                    <td th:text="${conn.type}">Onions</td>
+                    <td th:text="${conn.connString}">Onions</td>
+                    <td th:text="${conn.username}">Onions</td>
+                    <td th:text="${conn.remark}">Onions</td>
+                    <td th:text="${conn.lastUpdateTime}">Onions</td>
+                    <td th:object="${conn}" th:onclick="|click_edit(${conn.connId})|"><a >Edit</a></td>
+                </tr>
+            </tbody>
+        </table>
+</div>
+<!--END body-->
+<!--footer-->
+<div th:replace="common/footer"></div>
+<!--END footer-->
 </div>
 <script>
     function click_edit(id) {

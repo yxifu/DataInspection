@@ -2,35 +2,90 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:include="common/head::head('DataInspection')"></head>
 <body>
-<style>
-    body{background-color: #eeeeee;}
-    .login-body{ background-color: white;    background-color: white;
-        width: 350px;
-        float: right;
-        margin-top: 10%;
-        margin-right: 10%;
-        border-radius: 5px;
-        padding: 5px 10px; }
-</style>
-<div class="container">
-    <div class="login-body">
-        <form method="post">
-            <div class="form-group">
-                <label for="userName">userName</label>
-                <input type="text" class="form-control" id="userName" name="userName" th:value="${apiInterface.data.userName}">
-            </div>
-            <div class="form-group">
-                <label for="password">password</label>
-                <input type="password" class="form-control" id="password" name="password" th:value="${apiInterface.data.password}">
-                <small id="emailHelp" class="form-text text-muted">初始化密码: admin</small>
-            </div>
-            <div th:if="${apiInterface.error_code>0}" th:text="${apiInterface.message}" class="text-danger"></div>
+    <div class="layui-row">
 
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-    </div>
+            <div class="layui-col-xs12 layui-col-sm8 layui-col-md4 layui-col-sm-offset2 layui-col-md-offset4">
+                <!--<div class="grid-demo layui-bg-red">移动：6/12 | 平板：6/12 | 桌面：4/12</div>-->
+                <blockquote class="layui-elem-quote layui-text">
+                    欢迎访问后台管理系统
+                </blockquote>
+
+                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                    <legend>登录</legend>
+                </fieldset>
+
+                <form  class="layui-form form-horizontal" th:action="@{/login}" method="POST">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">账号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="userName" lay-verify="myRequire" autocomplete="off" placeholder="用户名" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">密码框</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="password" placeholder="请输入密码" lay-verify="myRequire" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <!--            <div class="layui-form-item">
+                                    <label class="layui-form-label">验证码</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="verifyCode" placeholder="验证码" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>-->
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <input type="hidden" id="referer" th:value="${referer}" />
+                            <button class="layui-btn" lay-submit lay-filter="formDemo">登录</button>
+                        </div>
+                    </div>
+                    <script>
+                        layui.use('form', function(){
+                            var form = layui.form;
+
+                            //各种基于事件的操作，下面会有进一步介绍
+                            form.verify({
+                                myRequire: function(value, item) { //value：表单的值、item：表单的DOM对象
+                                    //console.log(value);
+                                    if(value.length==0){
+                                        return '不能为空';
+                                    }
+                                }
+                            });
+                            //监听提交
+                            form.on('submit(formDemo)', function(data){
+                                //layer.msg(JSON.stringify(data.field));
+                                $.post('/login',data.field,function (returnData) {
+                                    // console.log(returnData);
+                                    if(returnData.error_code==0){
+                                        layer.alert("登录成功！",{title:'保存',icon:1,end:function () {
+                                                var referer = $('#referer').val();
+                                                if(referer.length>10){
+                                                    b = referer.substr(10);
+                                                    c= b.indexOf('/');
+                                                    referer= b.substr(c);
+                                                }
+                                                if(returnData.data !=''){
+                                                    window.open(returnData.data);
+                                                } else if(''!= referer && '/login'!= referer  && '/setting/modifyPassword'!= referer ) {
+                                                    window.open(referer);
+                                                } else {
+                                                    window.open('/');
+                                                }
+                                            }});
+                                    } else{
+                                        layer.alert("保存失败："+returnData.message,{title:'保存',icon:2});
+                                    }
+                                });
+
+                                return false;
+                            });
+
+                        });
+                    </script>
+                </form>
+            </div>
+        </div>
 </div>
-<script>
-</script>
 </body>
 </html>

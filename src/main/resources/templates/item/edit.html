@@ -3,68 +3,84 @@
 <head th:include="common/head::head('Item Edit-Group-DataInspection')"></head>
 <body>
 
-    <div class="container" th:if="${apiInterface == null || apiInterface.error_code>0}">
-        <form method="post">
-            <input type="hidden" id="id" name="id" th:value="${item.id}">
-            <input type="hidden" id="groupId" name="groupId" th:value="${item.groupId}">
+    <form class="layui-form">
+        <input type="hidden" id="id" name="id" th:value="${item.id}">
+        <input type="hidden" id="groupId" name="groupId" th:value="${item.groupId}">
 
-            <div class="form-group row">
-                <label for="title" class="col-sm-3 col-form-label">title</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="title" name="title" th:value="${item.title}">
-                </div>
+        <div class="layui-form-item">
+            <label for="title" class="layui-form-label">title</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" id="title" name="title"  lay-verify="myRequire"  th:value="${item.title}">
             </div>
-            <div class="form-group row">
-                <label for="connId" class="col-sm-3 col-form-label">conn</label>
-                <div class="col-sm-9">
-                    <select id="connId" name="connId">
-                        <option th:each="conn,connStat  : ${connList}" th:selected="${conn.connId == item.connId}" th:value="${conn.connId}"  th:text="${conn.name}"></option>
-                    </select>
-                </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="connId" class="layui-form-label">conn</label>
+            <div class="layui-input-block">
+                <select id="connId" name="connId">
+                    <option th:each="conn,connStat  : ${connList}" th:selected="${conn.connId == item.connId}" th:value="${conn.connId}"  th:text="${conn.name}"></option>
+                </select>
             </div>
-            <div class="form-group row">
-                <label for="sql" class="col-sm-3 col-form-label">sql</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="sql" name="sql" th:value="${item.sql}">
-                </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="sql" class="layui-form-label">sql</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" lay-verify="myRequire"  id="sql" name="sql" th:value="${item.sql}">
             </div>
+        </div>
 
-            <div class="form-group row">
-                <label for="status" class="col-sm-3 col-form-label">status</label>
-                <div class="col-sm-9">
-                    <select id="status" name="status">
-                        <option th:selected="${1 == item.status}" value="1">正常</option>
-                        <option th:selected="${0 == item.status}" value="0">停用</option>
-                        <option th:selected="${-1 == item.status}" value="-1">删除</option>
-                    </select>
-                </div>
+        <div class="layui-form-item">
+            <label for="status" class="layui-form-label">status</label>
+            <div class="layui-input-block">
+                <select id="status" name="status">
+                    <option th:selected="${1 == item.status}" value="1">正常</option>
+                    <option th:selected="${0 == item.status}" value="0">停用</option>
+                    <option th:selected="${-1 == item.status}" value="-1">删除</option>
+                </select>
             </div>
-            <div class="form-group row">
-                <label for="remark" class="col-sm-3 col-form-label">Remark</label>
-                <div class="col-sm-9">
-                    <textarea id="remark" name="remark" th:text="${item.remark}" class="form-control"></textarea>
-                </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="remark" class="layui-form-label">Remark</label>
+            <div class="layui-input-block">
+                <textarea id="remark" name="remark" th:text="${item.remark}" class="layui-textarea"></textarea>
             </div>
-            <div class="text-center">
-                <button class="btn btn-primary">保存</button>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
     <script>
-    </script>
-    <script th:if="${apiInterface != null && apiInterface.error_code==0}">
-
-        top.layer.alert("成功",{icon:1},function () {
-                //console.log(1111);
-                top.window.location=top.window.location;
-                //console.log(222222);
-                top.layer.closeAll();
-                //console.log(333333);
+        //Demo
+        layui.use('form', function(){
+            var form = layui.form;
+            //验证
+            form.verify({
+                myRequire: function(value, item) { //value：表单的值、item：表单的DOM对象
+                    //console.log(value);
+                    if(value.length==0){
+                        return '不能为空';
+                    }
+                }
             });
-    </script>
-    <script th:if="${apiInterface != null && apiInterface.error_code>0}">
-        //parent.layer.closeAll();
-        layer.alert("保存失败",{icon:2});
+            //监听提交
+            form.on('submit(formDemo)', function(data){
+                //layer.msg(JSON.stringify(data.field));
+                $.post('/item/edit',data.field,function (returnData) {
+                    // console.log(returnData);
+                    if(returnData.error_code==0){
+                        layer.alert("保存成功！",{title:'保存',icon:1,end:function () {
+                                parent.layer.closeAll();
+                                parent.fun_reload();
+                            }});
+                    } else{
+                        layer.alert("保存失败："+returnData.message,{title:'保存',icon:2});
+                    }
+                });
+
+                return false;
+            });
+        });
     </script>
 </body>
 </html>

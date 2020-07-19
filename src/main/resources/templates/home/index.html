@@ -1,29 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:include="common/head::head('DataInspection')"></head>
-<body>
-<div th:replace="common/navbar::navbar(${topNavBar})"></div>
-<div class="container">
-<!--    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page">首页</li>
-        </ol>
-    </nav>-->
-    <br>
-    <div class="jumbotron">
-        <h1 class="display-4" th:text="#{home.info}"></h1>
-        <!--<p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-        <hr class="my-4">
-        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>-->
-        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-    </div>
-
-
+<head>
+    <th:block th:replace="common/head::head('DataInspection')"></th:block>
     <link rel="stylesheet" href="/js/editormd/css/editormd.preview.min.css">
-    <div id="test-markdown-view">
-        <!-- Server-side output Markdown text -->
+</head>
+<body class="layui-layout-body single-page">
+    <div class="layui-layout layui-layout-admin">
+        <!--header-->
+        <div th:replace="common/navbar::navbar(${topNavBar})"></div>
+        <!--END header-->
+        <!--body-->
+        <div class="layui-body">
+            <div id="test-markdown-view">
+                <!-- Server-side output Markdown text -->
 
-        <textarea style="display:none;">
+                <textarea style="display:none;">
 # Data Inspection(数据巡检)
 
 ## 介绍
@@ -56,25 +47,27 @@
 ## 使用
 ### 使用说明
 
-### 找回密码
-    </textarea>
+### 找回密码</textarea>
+            </div>
+        </div>
+        <!--END body-->
+        <!--footer-->
+        <div th:replace="common/footer"></div>
+        <!--END footer-->
     </div>
-    <script src="/js/editormd/lib/marked.min.js"></script>
-    <script src="/js/editormd/lib/prettify.min.js"></script>
-    <script src="/js/editormd/editormd.min.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            var testView = editormd.markdownToHTML("test-markdown-view", {
-                // markdown : "[TOC]\n### Hello world!\n## Heading 2", // Also, you can dynamic set Markdown text
-                // htmlDecode : true,  // Enable / disable HTML tag encode.
-                // htmlDecode : "style,script,iframe",  // Note: If enabled, you should filter some dangerous HTML tags for website security.
-            });
+
+
+<script src="/js/editormd/lib/marked.min.js"></script>
+<script src="/js/editormd/lib/prettify.min.js"></script>
+<script src="/js/editormd/editormd.min.js"></script>
+<script type="text/javascript">
+    $(function() {
+        var testView = editormd.markdownToHTML("test-markdown-view", {
+            // markdown : "[TOC]\n### Hello world!\n## Heading 2", // Also, you can dynamic set Markdown text
+            // htmlDecode : true,  // Enable / disable HTML tag encode.
+            // htmlDecode : "style,script,iframe",  // Note: If enabled, you should filter some dangerous HTML tags for website security.
         });
-    </script>
-</div>
-
-<script>
+    });
 </script>
-
 </body>
 </html>

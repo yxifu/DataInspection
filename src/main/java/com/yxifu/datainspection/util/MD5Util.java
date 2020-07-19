@@ -152,6 +152,7 @@ public class MD5Util {
         String text = "com.yxifu";
         System.out.println("原始的：" + MD5(text));
         //System.out.println("加盐后：" + generate(text,"1684823178010576"));
+        System.out.println("加盐后：" + generate("2"));
         System.out.println("加盐后：" + generate(text));
         System.out.println("加盐后：" + generate(text));
         System.out.println("加盐后：" + generate(text));
@@ -162,6 +163,7 @@ public class MD5Util {
 
         System.out.println("比较后：" + verify("com.yxifu", generate(text)));
         System.out.println("比较后：" + verify("com.yxifu0", generate(text)));
+        System.out.println("比较后：" + verify("2","42513e3893c76e6fd03388677195f810"));
 
         //tempSalt 某一次加盐后的值
         String[] tempSalt = {

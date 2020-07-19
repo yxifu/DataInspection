@@ -3,75 +3,107 @@
 <head th:include="common/head::head('Item Edit-Group-DataInspection')"></head>
 <body>
 
-    <div class="container" th:if="${apiInterface == null || apiInterface.error_code>0}">
-        <form method="post">
-            <input type="hidden" id="id" name="id" th:value="${trigger.id}">
-            <input type="hidden" id="groupId" name="groupId" th:value="${trigger.groupId}">
+<form class="layui-form">
+    <input type="hidden" id="id" name="id" th:value="${trigger.id}">
+    <input type="hidden" id="groupId" name="groupId" th:value="${trigger.groupId}">
 
-            <div class="form-group row">
-                <label for="title" class="col-sm-3 col-form-label">title</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="title" name="title" th:value="${trigger.title}">
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="trigger_type" class="col-sm-2 col-form-label">trigger_type</label>
-                <div class="col-sm-10">
-                    <select id="triggerType" name="triggerType" class="form-control">
-                        <option th:selected="${trigger.triggerType=='1'}" value="1" >固定时间间隔</option>
-                        <option th:selected="${trigger.triggerType=='2'}" value="2"  >Corn</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="corn" class="col-sm-3 col-form-label">Corn</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="corn" name="corn" th:value="${trigger.corn}">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="interval" class="col-sm-3 col-form-label">interval</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="interval" name="interval" th:value="${trigger.interval}">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="status" class="col-sm-3 col-form-label">status</label>
-                <div class="col-sm-9">
-                    <select id="status" name="status">
-                        <option th:selected="${1 == trigger.status}" value="1">正常</option>
-                        <option th:selected="${0 == trigger.status}" value="0">停用</option>
-                        <option th:selected="${-1 == trigger.status}" value="-1">删除</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="remark" class="col-sm-3 col-form-label">Remark</label>
-                <div class="col-sm-9">
-                    <textarea id="remark" name="remark" th:text="${trigger.remark}" class="form-control"></textarea>
-                </div>
-            </div>
-            <div class="text-center">
-                <button class="btn btn-primary">保存</button>
-            </div>
-        </form>
+    <div class="layui-form-item">
+        <label for="title" class="layui-form-label">title</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="title" name="title"  lay-verify="myRequire" th:value="${trigger.title}">
+        </div>
     </div>
-    <script>
-    </script>
-    <script th:if="${apiInterface != null && apiInterface.error_code==0}">
 
-        top.layer.alert("成功",{icon:1},function () {
-                //console.log(1111);
-                top.window.location=top.window.location;
-                //console.log(222222);
-                top.layer.closeAll();
-                //console.log(333333);
+    <div class="layui-form-item">
+        <label for="triggerType" class="layui-form-label">trigger_type</label>
+        <div class="layui-input-block">
+            <select id="triggerType" name="triggerType" class="layui-input">
+                <option th:selected="${trigger.triggerType=='1'}" value="1" >固定时间间隔</option>
+                <option th:selected="${trigger.triggerType=='2'}" value="2"  >Corn</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label for="corn" class="layui-form-label">Corn</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="corn"  lay-verify="corn" name="corn" th:value="${trigger.corn}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label for="interval" class="layui-form-label">interval</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="interval" name="interval"  lay-verify="interval" th:value="${trigger.interval}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label for="status" class="layui-form-label">status</label>
+        <div class="layui-input-block">
+            <select id="status" name="status">
+                <option th:selected="${1 == trigger.status}" value="1">正常</option>
+                <option th:selected="${0 == trigger.status}" value="0">停用</option>
+                <option th:selected="${-1 == trigger.status}" value="-1">删除</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label for="remark" class="layui-form-label">Remark</label>
+        <div class="layui-input-block">
+            <textarea id="remark" name="remark" th:text="${trigger.remark}" class="layui-input"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
+        </div>
+    </div>
+</form>
+<script>
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+        //验证
+        form.verify({
+            myRequire: function(value, item) { //value：表单的值、item：表单的DOM对象
+                //console.log(value);
+                if(value.length==0){
+                    return '不能为空';
+                }
+            },
+            corn: function (value, item) {
+                if($('#triggerType').val()=='2'){
+                    reg= /^\s*($|#|\w+\s*=|(\?|\*|(?:[0-5]?\d)(?:(?:-|\/|\,)(?:[0-5]?\d))?(?:,(?:[0-5]?\d)(?:(?:-|\/|\,)(?:[0-5]?\d))?)*)\s+(\?|\*|(?:[0-5]?\d)(?:(?:-|\/|\,)(?:[0-5]?\d))?(?:,(?:[0-5]?\d)(?:(?:-|\/|\,)(?:[0-5]?\d))?)*)\s+(\?|\*|(?:[01]?\d|2[0-3])(?:(?:-|\/|\,)(?:[01]?\d|2[0-3]))?(?:,(?:[01]?\d|2[0-3])(?:(?:-|\/|\,)(?:[01]?\d|2[0-3]))?)*)\s+(\?|\*|(?:0?[1-9]|[12]\d|3[01])(?:(?:-|\/|\,)(?:0?[1-9]|[12]\d|3[01]))?(?:,(?:0?[1-9]|[12]\d|3[01])(?:(?:-|\/|\,)(?:0?[1-9]|[12]\d|3[01]))?)*)\s+(\?|\*|(?:[1-9]|1[012])(?:(?:-|\/|\,)(?:[1-9]|1[012]))?(?:L|W)?(?:,(?:[1-9]|1[012])(?:(?:-|\/|\,)(?:[1-9]|1[012]))?(?:L|W)?)*|\?|\*|(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(?:(?:-)(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))?(?:,(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)(?:(?:-)(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))?)*)\s+(\?|\*|(?:[0-6])(?:(?:-|\/|\,|#)(?:[0-6]))?(?:L)?(?:,(?:[0-6])(?:(?:-|\/|\,|#)(?:[0-6]))?(?:L)?)*|\?|\*|(?:MON|TUE|WED|THU|FRI|SAT|SUN)(?:(?:-)(?:MON|TUE|WED|THU|FRI|SAT|SUN))?(?:,(?:MON|TUE|WED|THU|FRI|SAT|SUN)(?:(?:-)(?:MON|TUE|WED|THU|FRI|SAT|SUN))?)*)(|\s)+(\?|\*|(?:|\d{4})(?:(?:-|\/|\,)(?:|\d{4}))?(?:,(?:|\d{4})(?:(?:-|\/|\,)(?:|\d{4}))?)*))$/i
+                    if(!reg.test(value)){
+                        return 'Corn表达式格式不正确';
+                    }
+                }
+            },
+            interval: function (value, item) {
+                if($('#triggerType').val()=='1'){
+                    reg= /^[1-9][0-9]*$/i
+                    if(!reg.test(value)){
+                        return '必须是整数';
+                    }
+                }
+            }
+        });
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            //layer.msg(JSON.stringify(data.field));
+            $.post('/trigger/edit',data.field,function (returnData) {
+                // console.log(returnData);
+                if(returnData.error_code==0){
+                    layer.alert("保存成功！",{title:'保存',icon:1,end:function () {
+                            parent.layer.closeAll();
+                            parent.fun_reload();
+                        }});
+                } else{
+                    layer.alert("保存失败："+returnData.message,{title:'保存',icon:2});
+                }
             });
-    </script>
-    <script th:if="${apiInterface != null && apiInterface.error_code>0}">
-        //parent.layer.closeAll();
-        layer.alert("保存失败",{icon:2});
-    </script>
+
+            return false;
+        });
+    });
+</script>
 </body>
 </html>

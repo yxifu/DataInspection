@@ -110,14 +110,16 @@ public class SettingController {
             setting.setStatus(1);
             setting.setCode("setting");
         }
+        model.addAttribute("topNavBar","setting");
         model.addAttribute("setting",setting);
         model.addAttribute("apiInterface",null);
         return "setting/email";
     }
 
 
+    @ResponseBody
     @RequestMapping(value = "/email",method = RequestMethod.POST)
-    public String email(Model model, Setting setting
+    public ApiInterface<Setting> email(Model model, Setting setting
             , HttpServletRequest request, HttpServletResponse response){
         int id= setting.getId();
         ApiInterface<Setting> apiInterface = new ApiInterface<>();
@@ -139,9 +141,7 @@ public class SettingController {
                 apiInterface.setMessage("添加出错");
             }
         }
-        model.addAttribute("setting",setting);
-        model.addAttribute("apiInterface",apiInterface);
-        return "setting/email";
+        return apiInterface;
     }
 
 
@@ -154,65 +154,79 @@ public class SettingController {
 
 
 
-    @RequestMapping(value = "/modifyPassword",method ={  RequestMethod.GET,RequestMethod.POST})
-    public String modifyPassword(Model model, UserBean userBean
-            , HttpServletRequest request, HttpServletResponse response){
-        model.addAttribute("topNavBar","setting");
+    @RequestMapping(value = "/modifyPassword",method =RequestMethod.GET)
+    public String modifyPassword(Model model, HttpServletRequest request, HttpServletResponse response){
         // 获取请求是从哪里来的
         String referer = request.getHeader("referer");
         ApiInterface<UserBean> apiInterface = new ApiInterface<>();
-        if(userBean.getUserName()==null && userBean.getPassword()==null){
-            userBean.setUserName("admin");
-            apiInterface.setError_code(1);
-        } else {
+        UserBean userBean = new UserBean();
+        userBean.setUserName("admin");
+        apiInterface.setData(userBean);
 
-            QueryWrapper<Setting> queryWapperSetting = new QueryWrapper<>();
-            queryWapperSetting.lambda().eq(Setting::getCode,"admin_password").eq(Setting::getStatus,1);
-            Setting setting = this.iSettingService.getOne(queryWapperSetting);
-            boolean checkDefaultPassword =true;
-            if(setting!=null && setting.getValue()!=null && !"".equals(setting.getValue())  ){
-                checkDefaultPassword=false;
-            }
+        model.addAttribute("topNavBar","setting");
+        model.addAttribute("userBean",userBean);
+        model.addAttribute("referer",referer);
+        return "setting/modifyPassword";
+    }
 
-            boolean loginSuccess =false;
-            if(!checkDefaultPassword){
-                if("admin".equals(userBean.getUserName()) &&
-                        MD5Util.verify(userBean.getOldPassword(),setting.getValue())
-                ){
-                    loginSuccess=true;
-                } else {
-                    apiInterface.setError_code(300);
-                    apiInterface.setMessage("账号和密码不正确！");
-                }
-            } else  if("admin".equals(userBean.getUserName()) && "admin".equals(userBean.getOldPassword())){
-                loginSuccess=true;
+
+    @ResponseBody
+    @RequestMapping(value = "/modifyPassword",method =RequestMethod.POST)
+    public ApiInterface<String> modifyPassword(UserBean userBean
+            , HttpServletRequest request, HttpServletResponse response) {
+        // 获取请求是从哪里来的
+        String referer = request.getHeader("referer");
+        ApiInterface<String> apiInterface = new ApiInterface<>();
+
+        QueryWrapper<Setting> queryWapperSetting = new QueryWrapper<>();
+        queryWapperSetting.lambda().eq(Setting::getCode, "admin_password").eq(Setting::getStatus, 1);
+        Setting setting = this.iSettingService.getOne(queryWapperSetting);
+        boolean checkDefaultPassword = true;
+        if (setting != null && setting.getValue() != null && !"".equals(setting.getValue())) {
+            checkDefaultPassword = false;
+        }
+
+        boolean loginSuccess = false;
+        if (!checkDefaultPassword) {
+            if ("admin".equals(userBean.getUserName()) &&
+                    MD5Util.verify(userBean.getOldPassword(), setting.getValue())
+            ) {
+                loginSuccess = true;
             } else {
                 apiInterface.setError_code(300);
                 apiInterface.setMessage("账号和密码不正确！");
             }
-            if(apiInterface.getError_code()!=1){
-                if(loginSuccess)
-                {
-                    if(setting==null){
-                        setting = new Setting();
-                        setting.setCode("admin_password");
-                        setting.setValue(MD5Util.generate(userBean.getPassword()));
-                        setting.setLastUpdateTime(Tools.formatDate(Tools.DateFormat_yyyyMMDDHHmmss));
-                        setting.setStatus(1);
-                        this.iSettingService.save(setting);
-                    } else
-                    {
-                        setting.setValue(MD5Util.generate(userBean.getPassword()));
-                        setting.setLastUpdateTime(Tools.formatDate(Tools.DateFormat_yyyyMMDDHHmmss));
-                        this.iSettingService.updateById(setting);
+        } else if ("admin".equals(userBean.getUserName()) && "admin".equals(userBean.getOldPassword())) {
+            loginSuccess = true;
+        } else {
+            apiInterface.setError_code(300);
+            apiInterface.setMessage("账号和密码不正确！");
+        }
+        if (apiInterface.getError_code() != 1) {
+            if (loginSuccess) {
+                if (setting == null) {
+                    setting = new Setting();
+                    setting.setCode("admin_password");
+
+                    boolean getPW =false;
+                    while (!getPW){
+                        String  s1 = MD5Util.generate(userBean.getPassword());
+                        if(MD5Util.verify(userBean.getPassword(),s1))
+                        {
+                            setting.setValue(s1);
+                            getPW =true;
+                        }
                     }
+                    setting.setLastUpdateTime(Tools.formatDate(Tools.DateFormat_yyyyMMDDHHmmss));
+                    setting.setStatus(1);
+                    this.iSettingService.save(setting);
+                } else {
+                    setting.setValue(MD5Util.generate(userBean.getPassword()));
+                    setting.setLastUpdateTime(Tools.formatDate(Tools.DateFormat_yyyyMMDDHHmmss));
+                    this.iSettingService.updateById(setting);
                 }
             }
         }
-        apiInterface.setData(userBean);
-
-        model.addAttribute("userBean",userBean);
-        model.addAttribute("apiInterface",apiInterface);
-        return "setting/modifyPassword";
+        return apiInterface;
     }
 }

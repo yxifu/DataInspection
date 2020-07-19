@@ -57,5 +57,9 @@ public  class Tools {
         return md5code;
     }
 
+    public static boolean notNullOrEmpty(String str){
+        return str!=null && !"".equals(str);
+    }
+
 
 }

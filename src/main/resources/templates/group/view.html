@@ -1,160 +1,216 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:include="common/head::head('Group View-Setting-DataInspection')"></head>
-<body>
+<head>
+    <th:block th:replace="common/head::head('DataInspection')"></th:block>
+</head>
+<body class="layui-layout-body single-page">
+<div class="layui-layout layui-layout-admin">
+    <!--header-->
+    <div th:replace="common/navbar::navbar(${topNavBar})"></div>
+    <!--END header-->
+    <!--body-->
+    <div class="layui-body" style="padding: 10px;">
+        <!--<style>
+            .card > .card-header >span > .bi-chevron-double-right{ display:none;}
+            .card > .card-header >span > .bi-chevron-double-down{ display:inline-block;     float: right;}
+            .card.hide-body > .card-header >span > .bi-chevron-double-right{ display:inline-block;    float: right;}
+            .card.hide-body > .card-header >span > .bi-chevron-double-down{ display:none;}
+        </style>-->
 
-    <div class="container">
+        <div class="layui-collapse" style="margin-bottom: 10px;">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">数据巡检 Base Info</h2>
+                <div class="layui-colla-content layui-show">
 
-        <div class="card">
-            <h5 class="card-header">Base Info</h5>
-            <div class="card-body">
+                    <form class="layui-form">
+                        <input type="hidden" id="groupId" name="groupId" th:value="${group.groupId}">
+                        <div class="layui-form-item">
+                            <label for="name"  class="layui-form-label">Name</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" id="name" name="name" th:value="${group.name}">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label for="groupCode"  class="layui-form-label">groupCode</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" id="groupCode" name="groupCode" th:value="${group.groupCode}">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label   class="layui-form-label">isSend</label>
+                            <div class="layui-input-block">
 
-                <form method="post">
-                    <input type="hidden" id="groupId" name="groupId" th:value="${group.groupId}">
-                    <div class="form-group row">
-                        <label for="name" class="col-sm-3 col-form-label">Name</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="name" name="name" th:value="${group.name}">
+                                <!--<select id="isSend" name="isSend">
+                                    <option th:selected="${group.isSend=='0'}" value="0" >否</option>
+                                    <option th:selected="${group.isSend=='1'}" value="1" >是</option>
+                                </select>-->
+                                <input type="checkbox" name="isSend" lay-skin="switch"  lay-text="开启|关闭" th:selected="${group.isSend=='1'}"/>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="groupCode" class="col-sm-3 col-form-label">groupCode</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="groupCode" name="groupCode" th:value="${group.groupCode}">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label  class="col-sm-3 col-form-label">isSend</label>
-                        <div class="col-sm-9">
+                        <div class="layui-form-item">
+                            <label   class="layui-form-label">isSendEmail</label>
+                            <div class="layui-input-block">
+                                <!--<select id="isSendEmail" name="isSendEmail"  lay-verify="required">
+                                    <option th:selected="${group.isSendEmail=='0'}" value="0" >否</option>
+                                    <option th:selected="${group.isSendEmail=='1'}" value="1" >是</option>
+                                </select>-->
 
-                            <select id="isSend" name="isSend" class="form-control">
-                                <option th:selected="${group.isSend=='0'}" value="0" >否</option>
-                                <option th:selected="${group.isSend=='1'}" value="1" >是</option>
-                            </select>
-                            <!--<input type="text" class="form-control" id="isSend" name="isSend" th:value="${group.isSend}">-->
-                            <!--<input class="form-check-input" type="checkbox" value="1" id="isSend" name="isSend">
-                              <label class="form-check-label" for="isSend">
-                                  isSend
-                              </label>-->
+                                <input type="checkbox" name="isSendEmail" lay-skin="switch"  lay-text="开启|关闭"  th:selected="${group.isSendEmail=='1'}"/>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label  class="col-sm-3 col-form-label">isSendEmail</label>
-                        <div class="col-sm-9">
-                            <select id="isSendEmail" name="isSendEmail" class="form-control">
-                                <option th:selected="${group.isSendEmail=='0'}" value="0" >否</option>
-                                <option th:selected="${group.isSendEmail=='1'}" value="1" >是</option>
-                            </select>
-                            <!--<input type="text" class="form-control" id="isSend" name="isSend" th:value="${group.isSend}">-->
-                            <!--<input class="form-check-input" type="checkbox" value="1" id="isSendEmail" name="isSendEmail">
-                            <label class="form-check-label" for="isSendEmail">
-                                isSendEmail
-                            </label>-->
+                        <div class="layui-form-item">
+                            <label for="groupCode"  class="layui-form-label">emails</label>
+                            <div class="layui-input-block">
+                                <input type="text" class="layui-input" id="emails" name="emails" th:value="${group.emails}">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="groupCode" class="col-sm-3 col-form-label">emails</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="emails" name="emails" th:value="${group.emails}">
+                        <div class="layui-form-item">
+                            <label for="triggerCondition"  class="layui-form-label">triggerCondition</label>
+                            <div class="layui-input-block">
+                                <select id="triggerCondition" name="triggerCondition"  lay-verify="required">
+                                    <option th:selected="${group.triggerCondition=='0'}" value="0" >默认(只有查询到数据，才触发发送事件)</option>
+                                    <option th:selected="${group.triggerCondition=='1'}" value="1" >发送</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="triggerCondition" class="col-sm-3 col-form-label">triggerCondition</label>
-                        <div class="col-sm-9">
-                            <select id="triggerCondition" name="triggerCondition" class="form-control">
-                                <option th:selected="${group.triggerCondition=='0'}" value="0" >默认(只有查询到数据，才触发发送事件)</option>
-                                <option th:selected="${group.triggerCondition=='1'}" value="1" >发送</option>
-                            </select>
+                        <div class="layui-form-item">
+                            <label for="remark"  class="layui-form-label">Remark</label>
+                            <div class="layui-input-block">
+                                <textarea id="remark" name="remark" th:text="${group.remark}" class="layui-textarea"></textarea>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="remark" class="col-sm-3 col-form-label">Remark</label>
-                        <div class="col-sm-9">
-                            <textarea id="remark" name="remark" th:text="${group.remark}" class="form-control"></textarea>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn"  onclick="click_group_edit();return false;">编辑</button>
+                                <a class="layui-btn layui-btn-primary"  target="_blank" th:href="@{'/group/result?id='+${group.groupId}}" >查看巡检结果</a>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+
+                    <script>
+                        //Demo
+                        layui.use('form', function(){
+                            var form = layui.form;
+
+                            //监听提交
+                            form.on('submit(formDemo)', function(data){
+                                layer.msg(JSON.stringify(data.field));
+                                return false;
+                            });
+                        });
+                    </script>
+
+                </div>
+            </div>
+        </div>
+        <div class="layui-collapse" style="margin-bottom: 10px;">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">触发器</h2>
+                <div class="layui-colla-content layui-show">
+
+                    <a href="#" class="layui-btn" onclick="click_trigger_edit(0);return false;">添加</a>
+
+                    <table class="layui-table">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>title</th>
+                            <th>triggerType</th>
+                            <th>corn</th>
+                            <th>interval</th>
+                            <th>Remark</th>
+                            <th>LastUpdateTime</th>
+                            <th>Status</th>
+                            <th>Edit</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="trigger,triggerStat  : ${triggerList}">
+                            <th th:text="${triggerStat.index+1}">状态变量：index</th>
+                            <td th:text="${trigger.title}">Onions</td>
+                            <td th:text="${trigger.triggerType}">Onions</td>
+                            <td th:text="${trigger.corn}">Onions</td>
+                            <td th:text="${trigger.interval}">Onions</td>
+                            <td th:text="${trigger.remark}">Onions</td>
+                            <td th:text="${trigger.lastUpdateTime}">Onions</td>
+                            <td><span th:if="${trigger.status==0}">停用</span></td>
+                            <td th:object="${trigger}" >
+                                <a th:onclick="|click_trigger_edit(${trigger.id})|" >Edit</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="layui-collapse" style="margin-bottom: 10px;">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">检查项</h2>
+                <div class="layui-colla-content layui-show">
+                    <a href="#" class="layui-btn" onclick="click_item_edit(0);return false;">添加</a>
+
+                    <table class="layui-table">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>title</th>
+                            <th>conn</th>
+                            <th>sql</th>
+                            <th>Remark</th>
+                            <th>lastUpdateTime</th>
+                            <th>Status</th>
+                            <th>Edit</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="item,itemStat  : ${itemList}">
+                            <th th:text="${itemStat.index+1}">状态变量：index</th>
+                            <td th:text="${item.title}">Onions</td>
+                            <td th:object="${item}" >
+                                <span th:each="conn,connStat:${connList}" th:if="${conn.connId==item.connId}" th:text="${conn.name}"></span>
+
+                            </td>
+                            <td th:text="${item.sql}">Onions</td>
+                            <td th:text="${item.remark}">Onions</td>
+                            <td th:text="${item.lastUpdateTime}">Onions</td>
+                            <td><span th:if="${item.status==0}">停用</span></td>
+                            <td th:object="${item}" >
+                                <a th:onclick="|click_item_edit(${item.id})|" >Edit</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
             </div>
         </div>
 
-        <div class="card" style="margin-top: 15px;">
-            <h5 class="card-header">触发器</h5>
-            <div class="card-body">
-                <a href="#" class="btn btn-primary" onclick="click_trigger_edit(0);return false;">添加</a>
-
-                <table class="table  table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th>title</th>
-                        <th>triggerType</th>
-                        <th>corn</th>
-                        <th>interval</th>
-                        <th>Remark</th>
-                        <th>LastUpdateTime</th>
-                        <th>Status</th>
-                        <th>Edit</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="trigger,triggerStat  : ${triggerList}">
-                        <th th:text="${triggerStat.index+1}">状态变量：index</th>
-                        <td th:text="${trigger.title}">Onions</td>
-                        <td th:text="${trigger.triggerType}">Onions</td>
-                        <td th:text="${trigger.corn}">Onions</td>
-                        <td th:text="${trigger.interval}">Onions</td>
-                        <td th:text="${trigger.remark}">Onions</td>
-                        <td th:text="${trigger.lastUpdateTime}">Onions</td>
-                        <td><span th:if="${trigger.status==0}">停用</span></td>
-                        <td th:object="${trigger}" >
-                            <a th:onclick="|click_trigger_edit(${trigger.id})|" >Edit</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="card" style="margin-top: 15px;">
-            <h5 class="card-header">检查项</h5>
-            <div class="card-body">
-                <!--<h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                --><a href="#" class="btn btn-primary" onclick="click_item_edit(0);return false;">添加</a>
-
-                <table class="table  table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th>title</th>
-                        <th>connId</th>
-                        <th>sql</th>
-                        <th>Remark</th>
-                        <th>lastUpdateTime</th>
-                        <th>Status</th>
-                        <th>Edit</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="item,itemStat  : ${itemList}">
-                        <th th:text="${itemStat.index+1}">状态变量：index</th>
-                        <td th:text="${item.title}">Onions</td>
-                        <td th:text="${item.connId}">Onions</td>
-                        <td th:text="${item.sql}">Onions</td>
-                        <td th:text="${item.remark}">Onions</td>
-                        <td th:text="${item.lastUpdateTime}">Onions</td>
-                        <td><span th:if="${item.status==0}">停用</span></td>
-                        <td th:object="${item}" >
-                            <a th:onclick="|click_item_edit(${item.id})|" >Edit</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
+    <!--END body-->
+    <!--footer-->
+    <div th:replace="common/footer"></div>
+    <!--END footer-->
     <script>
 
+        function fun_reload() {
+            window.location=window.location;
+
+        }
+
+        function click_group_edit() {
+            var id = $('#groupId').val();
+            //alert(id);
+            var url = "/group/edit?id="+id;
+
+            window.alyer_index = layer.open({
+                type: 2,
+                area: ['700px', '500px'],
+                fixed: false, //不固定
+                maxmin: true,
+                content: url,
+                title: id==0?'New Group':'Edit Group'
+            });
+        }
         function click_item_edit(id) {
             //alert(id);
             var url = "/item/edit?groupId="+$("#groupId").val()+"&id="+id;

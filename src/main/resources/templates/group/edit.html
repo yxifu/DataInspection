@@ -1,122 +1,115 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:include="common/head::head('Group Edit-Setting-DataInspection')"></head>
+<head>
+    <th:block th:replace="common/head::head('DataInspection')"></th:block>
+</head>
 <body>
-
-    <div class="container" th:if="${apiInterface.error_code==1}">
-        <form method="post">
-            <input type="hidden" id="groupId" name="groupId" th:value="${group.groupId}">
-            <div class="form-group row">
-                <label for="name" class="col-sm-3 col-form-label">Name</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="name" name="name" th:value="${group.name}">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="groupCode" class="col-sm-3 col-form-label">groupCode</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="groupCode" name="groupCode" th:value="${group.groupCode}">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label  class="col-sm-3 col-form-label">isSend</label>
-                <div class="col-sm-9">
-
-                    <select id="isSend" name="isSend" class="form-control">
-                        <option th:selected="${group.isSend==0}" value="0" >否</option>
-                        <option th:selected="${group.isSend==1}" value="1" >是</option>
-                    </select>
-                    <!--<input type="text" class="form-control" id="isSend" name="isSend" th:value="${group.isSend}">-->
-                      <!--<input class="form-check-input" type="checkbox" value="1" id="isSend" name="isSend">
-                        <label class="form-check-label" for="isSend">
-                            isSend
-                        </label>-->
-                </div>
-            </div>
-            <div class="form-group row">
-                <label  class="col-sm-3 col-form-label">isSendEmail</label>
-                <div class="col-sm-9">
-                    <select id="isSendEmail" name="isSendEmail" class="form-control">
-                        <option th:selected="${group.isSendEmail==0}" value="0" >否</option>
-                        <option th:selected="${group.isSendEmail==1}" value="1" >是</option>
-                    </select>
-                    <!--<input type="text" class="form-control" id="isSend" name="isSend" th:value="${group.isSend}">-->
-                    <!--<input class="form-check-input" type="checkbox" value="1" id="isSendEmail" name="isSendEmail">
-                    <label class="form-check-label" for="isSendEmail">
-                        isSendEmail
-                    </label>-->
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="groupCode" class="col-sm-3 col-form-label">emails</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="emails" name="emails" th:value="${group.emails}">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="triggerCondition" class="col-sm-3 col-form-label">SendCondition</label>
-                <div class="col-sm-9">
-                    <select id="triggerCondition" name="triggerCondition" class="form-control">
-                        <option th:selected="${group.triggerCondition==0}" value="0" >默认(只有查询到数据，才触发发送事件)</option>
-                        <option th:selected="${group.triggerCondition==1}" value="1" >固定发送</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="remark" class="col-sm-3 col-form-label">Remark</label>
-                <div class="col-sm-9">
-                    <textarea id="remark" name="remark" th:text="${group.remark}" class="form-control"></textarea>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="status" class="col-sm-3 col-form-label">status</label>
-                <div class="col-sm-9">
-                    <select id="status" name="status">
-                        <option th:selected="${1 == group.status}" value="1">正常</option>
-                        <option th:selected="${0 == group.status}" value="0">停用</option>
-                        <option th:selected="${-1 == group.status}" value="-1">删除</option>
-                    </select>
-                </div>
-            </div>
-            <div class="text-center">
-                <button class="btn btn-primary">保存</button>
-            </div>
-        </form>
+<form class="layui-form">
+    <input type="hidden" id="groupId" name="groupId" th:value="${group.groupId}">
+    <div class="layui-form-item">
+        <label for="name"  class="layui-form-label">Name</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="name" name="name"  lay-verify="myRequire" th:value="${group.name}">
+        </div>
     </div>
-    <script>
-        function click_test() {
-            var data = $("form").serializeArray()
-            var newdata ={}
-            data.map(function(val,key){
-                newdata[val.name]=val.value;
-            })
-            $.post("testConn",
-                newdata
-                ,function(result){
-                    //console.log(result)
-                    if(result.data){
-                        alert("连接成功！")
-                    }else
-                    {
-                        alert("连接失败！"+result.message);
-                    }
-                    //$("span").html(result);
-                });
-        }
-    </script>
-    <script th:if="${apiInterface.error_code==0}">
+    <div class="layui-form-item layui-hide">
+        <label for="groupCode"  class="layui-form-label">groupCode</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="groupCode" name="groupCode" th:value="${group.groupCode}">
+        </div>
+    </div>
+    <div class="layui-form-item  layui-hide">
+        <label   class="layui-form-label">isSend</label>
+        <div class="layui-input-block">
 
-        top.layer.alert("成功",{icon:1},function () {
-                //console.log(1111);
-                top.window.location=top.window.location;
-                //console.log(222222);
-                top.layer.closeAll();
-                //console.log(333333);
+            <!--<select id="isSend" name="isSend">
+                <option th:selected="${group.isSend=='0'}" value="0" >否</option>
+                <option th:selected="${group.isSend=='1'}" value="1" >是</option>
+            </select>-->
+            <input type="checkbox" name="isSend" lay-skin="switch"  lay-text="开启|关闭" th:selected="${group.isSend=='1'}"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label   class="layui-form-label">isSendEmail</label>
+        <div class="layui-input-block">
+            <!--<select id="isSendEmail" name="isSendEmail"  lay-verify="required">
+                <option th:selected="${group.isSendEmail=='0'}" value="0" >否</option>
+                <option th:selected="${group.isSendEmail=='1'}" value="1" >是</option>
+            </select>-->
+
+            <input type="checkbox" name="isSendEmail" lay-skin="switch"  lay-text="开启|关闭"  th:selected="${group.isSendEmail=='1'}"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label for="groupCode"  class="layui-form-label">emails</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" id="emails" name="emails" th:value="${group.emails}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label for="triggerCondition"  class="layui-form-label">triggerCondition</label>
+        <div class="layui-input-block">
+            <select id="triggerCondition" name="triggerCondition"  lay-verify="required">
+                <option th:selected="${group.triggerCondition=='0'}" value="0" >默认(只有查询到数据，才触发发送事件)</option>
+                <option th:selected="${group.triggerCondition=='1'}" value="1" >发送</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label for="status" class="layui-form-label">status</label>
+        <div class="layui-input-block">
+            <select id="status" name="status">
+                <option th:selected="${1 == group.status}" value="1">正常</option>
+                <option th:selected="${0 == group.status}" value="0">停用</option>
+                <option th:selected="${-1 == group.status}" value="-1">删除</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label for="remark"  class="layui-form-label">Remark</label>
+        <div class="layui-input-block">
+            <textarea id="remark" name="remark" th:text="${group.remark}" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+        //验证
+        form.verify({
+            myRequire: function(value, item) { //value：表单的值、item：表单的DOM对象
+                //console.log(value);
+                if(value.length==0){
+                    return '不能为空';
+                }
+            }
+        });
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            //layer.msg(JSON.stringify(data.field));
+            $.post('/group/edit',data.field,function (returnData) {
+                // console.log(returnData);
+                if(returnData.error_code==0){
+                    layer.alert("保存成功！",{title:'保存',icon:1,end:function () {
+                            parent.layer.closeAll();
+                            parent.fun_reload();
+                        }});
+                } else{
+                    layer.alert("保存失败："+returnData.message,{title:'保存',icon:2});
+                }
             });
-    </script>
-    <script th:if="${apiInterface != null && apiInterface.error_code>1}">
-        //parent.layer.closeAll();
-        layer.alert("保存失败",{icon:2});
-    </script>
+
+            return false;
+        });
+    });
+</script>
 </body>
 </html>

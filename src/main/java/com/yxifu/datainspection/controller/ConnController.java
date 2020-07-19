@@ -49,7 +49,7 @@ public class ConnController {
 
 
     @RequestMapping(value = "/edit",method = RequestMethod.GET)
-    public String index(Model model, @PathParam("id") int id, HttpServletRequest request, HttpServletResponse response){
+    public String edit(Model model, @PathParam("id") int id, HttpServletRequest request, HttpServletResponse response){
 
         Conn conn= new Conn();
         if(id==0){
@@ -66,16 +66,16 @@ public class ConnController {
     }
 
 
+    @ResponseBody
     @RequestMapping(value = "/edit",method = RequestMethod.POST)
-    public String index(Model model, Conn conn
+    public ApiInterface<Boolean> edit(Model model, Conn conn
             , HttpServletRequest request, HttpServletResponse response){
         int id= conn.getConnId();
-        ApiInterface<Conn> apiInterface = new ApiInterface<>();
+        ApiInterface<Boolean> apiInterface = new ApiInterface<>();
         if(id>0) {
             conn.setLastUpdateTime(Tools.formatDate(Tools.DateFormat_yyyyMMDDHHmmss));
             boolean b = this.iConnService.updateById(conn);
-            //model.addAttribute("ispost",true);
-            apiInterface.setData(conn);
+            apiInterface.setData(b);
             if(!b){
                 apiInterface.setError_code(500);
                 apiInterface.setMessage("更新出错");
@@ -83,22 +83,14 @@ public class ConnController {
         }
         else
         {
-            //conn.setStatus(1);
-            //conn.setCreateTime(new Date());
             int count = this.iConnService.getBaseMapper().insert(conn);
-            apiInterface.setData(conn);
+            apiInterface.setData(count>0);
             if(count==0){
                 apiInterface.setError_code(500);
                 apiInterface.setMessage("添加出错");
             }
         }
-
-
-        //List<Conn> connslist = this.iConnService.list();
-        model.addAttribute("conn",conn);
-        model.addAttribute("apiInterface",apiInterface);
-        //System.out.println(request.getLocale());
-        return "conn/edit";
+        return apiInterface;
     }
 
 

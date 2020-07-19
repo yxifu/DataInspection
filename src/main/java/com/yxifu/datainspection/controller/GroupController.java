@@ -3,14 +3,12 @@ package com.yxifu.datainspection.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yxifu.datainspection.bean.ApiInterface;
 import com.yxifu.datainspection.bean.GroupResultBean;
+import com.yxifu.datainspection.entity.Conn;
 import com.yxifu.datainspection.entity.Group;
 import com.yxifu.datainspection.entity.Item;
 import com.yxifu.datainspection.entity.Trigger;
 import com.yxifu.datainspection.quartz.service.QuartzService;
-import com.yxifu.datainspection.service.GroupResultService;
-import com.yxifu.datainspection.service.IGroupService;
-import com.yxifu.datainspection.service.IItemService;
-import com.yxifu.datainspection.service.ITriggerService;
+import com.yxifu.datainspection.service.*;
 import com.yxifu.datainspection.util.Tools;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,6 +42,9 @@ public class GroupController {
     IItemService iItemService;
 
     @Autowired
+    IConnService iConnService;
+
+    @Autowired
     ITriggerService iTriggerService;
 
     @Autowired
@@ -58,8 +60,10 @@ public class GroupController {
 
     @RequestMapping("/list")
     public String list(Model model, HttpServletRequest request, HttpServletResponse response){
+        QueryWrapper<Group> queryWapper = new QueryWrapper<>();
+        queryWapper.lambda().ne(Group::getStatus,-1);
 
-        List<Group> list = this.iGroupService.list();
+        List<Group> list = this.iGroupService.list(queryWapper);
         System.out.println(list);
         model.addAttribute("groupList",list);
         model.addAttribute("topNavBar","group");
@@ -86,65 +90,63 @@ public class GroupController {
     }*/
 
 
-    @RequestMapping(value = "/edit",method = {RequestMethod.GET,RequestMethod.POST})
-    public String index(Model model, @PathParam("id") String id, Group group
+    @RequestMapping(value = "/edit",method = RequestMethod.GET)
+    public String edit(Model model, @PathParam("id") String id,HttpServletRequest request, HttpServletResponse response){
+        Group group = new Group();
+        try {
+            if(!"".equals(id) &&! "0".equals(id) && id!=null) {
+                //从数据库读
+                group = this.iGroupService.getById(id);
+            } else {//新建
+                group.setGroupId(0);
+                group.setIsSend(1);
+                group.setGroupCode(UUID.randomUUID().toString());
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
+            log.error("Group Load失败",e);
+        }
+        model.addAttribute("group",group);
+        model.addAttribute("topNavBar","group");
+        return "group/edit";
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/edit",method =RequestMethod.POST)
+    public ApiInterface<Group> edit(Model model, @PathParam("id") String id, Group group
             , HttpServletRequest request, HttpServletResponse response){
 
         ApiInterface<Group> apiInterface = new ApiInterface<>();
-
-        if(group.getGroupId()==null){//GET
-
-            try {
-                if(!"".equals(id) &&! "0".equals(id) && id!=null) {//从数据库读
-                    group = this.iGroupService.getById(id);
-                } else {//新建
-                    group.setGroupId(0);
-                    group.setGroupCode(UUID.randomUUID().toString());
-                }
+        try {
+            if (group.getGroupId() > 0) {
+                group.setLastUpdateTime(Tools.formatDate(Tools.DateFormat_yyyyMMDDHHmmss));
+                boolean b = this.iGroupService.updateById(group);
+                this.quartzService.initByGroup();
+                //model.addAttribute("ispost",true);
                 apiInterface.setData(group);
-                apiInterface.setError_code(1);
-            } catch (Exception e) {
-                //e.printStackTrace();
-                log.error("Group Load失败",e);
-                apiInterface.setError_code(90);
-            }
-        }
-        else {
-
-            try {
-                if (group.getGroupId() > 0) {
-                    group.setLastUpdateTime(Tools.formatDate(Tools.DateFormat_yyyyMMDDHHmmss));
-                    boolean b = this.iGroupService.updateById(group);
-                    this.quartzService.initByGroup();
-                    //model.addAttribute("ispost",true);
-                    apiInterface.setData(group);
-                    if (!b) {
-                        apiInterface.setError_code(500);
-                        apiInterface.setMessage("更新出错");
-                    }
-                } else {
-                    //conn.setStatus(1);
-                    //conn.setCreateTime(new Date());
-                    int count = this.iGroupService.getBaseMapper().insert(group);
-                    apiInterface.setData(group);
-                    if (count == 0) {
-                        apiInterface.setError_code(500);
-                        apiInterface.setMessage("添加出错");
-                    }
+                if (!b) {
+                    apiInterface.setError_code(500);
+                    apiInterface.setMessage("更新出错");
                 }
-            } catch (Exception e) {
-                //e.printStackTrace();
-                log.error("插入或更新失败",e);
-                apiInterface.setError_code(500);
-                apiInterface.setMessage("添加出错");
-
+            } else {
+                //conn.setStatus(1);
+                //conn.setCreateTime(new Date());
+                int count = this.iGroupService.getBaseMapper().insert(group);
+                apiInterface.setData(group);
+                if (count == 0) {
+                    apiInterface.setError_code(500);
+                    apiInterface.setMessage("添加出错");
+                }
             }
+        } catch (Exception e) {
+            //e.printStackTrace();
+            log.error("插入或更新失败",e);
+            apiInterface.setError_code(500);
+            apiInterface.setMessage("添加出错");
+
         }
-        model.addAttribute("group",group);
-        model.addAttribute("apiInterface",apiInterface);
-        model.addAttribute("topNavBar","group");
-        //System.out.println(request.getLocale());
-        return "group/edit";
+        return apiInterface;
     }
 
     @RequestMapping("/view")
@@ -161,9 +163,15 @@ public class GroupController {
         queryWapperTrigger.lambda().eq(Trigger::getGroupId,id).ne(Trigger::getStatus,-1);
         List<Trigger> triggerList = this.iTriggerService.list(queryWapperTrigger);
 
+        QueryWrapper<Conn> queryWapperConn = new QueryWrapper<>();
+        queryWapperConn.lambda().ne(Conn::getStatus,-1);
+        List<Conn> connList = this.iConnService.list(queryWapperConn);
+
+        model.addAttribute("topNavBar","group");
         model.addAttribute("group",group);
         model.addAttribute("itemList",itemList);
         model.addAttribute("triggerList",triggerList);
+        model.addAttribute("connList",connList);
         return "group/view";
     }
 
