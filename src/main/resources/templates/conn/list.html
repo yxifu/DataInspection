@@ -20,19 +20,20 @@
                 <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
                 <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
             </svg>
-            Add</button>
+            <th:block th:text="#{common.add}">Add</th:block>
+            </button>
 
         <table class="layui-table">
             <thead>
             <tr>
                 <th></th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>ConnString</th>
-                <th>Username</th>
-                <th>Remark</th>
-                <th>lastUpdateTime</th>
-                <th>Edit</th>
+                <th th:text="#{conn.name}">Name</th>
+                <th th:text="#{conn.type}">Type</th>
+                <th th:text="#{conn.connString}">ConnString</th>
+                <th th:text="#{conn.userName}">Username</th>
+                <th th:text="#{common.remark}">Remark</th>
+                <th th:text="#{common.lastUpdateTime}">lastUpdateTime</th>
+                <th th:text="#{common.edit}">Edit</th>
             </tr>
             </thead>
             <tbody>
@@ -44,7 +45,7 @@
                     <td th:text="${conn.username}">Onions</td>
                     <td th:text="${conn.remark}">Onions</td>
                     <td th:text="${conn.lastUpdateTime}">Onions</td>
-                    <td th:object="${conn}" th:onclick="|click_edit(${conn.connId})|"><a >Edit</a></td>
+                    <td th:object="${conn}"><a  th:onclick="|click_edit(${conn.connId})|" th:text="#{common.edit}">Edit</a></td>
                 </tr>
             </tbody>
         </table>
@@ -54,7 +55,7 @@
 <div th:replace="common/footer"></div>
 <!--END footer-->
 </div>
-<script>
+<script th:inline="javascript">
     function click_edit(id) {
         //alert(id);
         var url = "/conn/edit?id="+id;

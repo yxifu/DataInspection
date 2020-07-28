@@ -17,7 +17,8 @@
                 <path fill-rule="evenodd" d="M3.17 6.706a5 5 0 0 1 7.103-3.16.5.5 0 1 0 .454-.892A6 6 0 1 0 13.455 5.5a.5.5 0 0 0-.91.417 5 5 0 1 1-9.375.789z"/>
                 <path fill-rule="evenodd" d="M8.147.146a.5.5 0 0 1 .707 0l2.5 2.5a.5.5 0 0 1 0 .708l-2.5 2.5a.5.5 0 1 1-.707-.708L10.293 3 8.147.854a.5.5 0 0 1 0-.708z"/>
             </svg>
-            Reload</button>
+            <th:block th:text="#{monitor.reload}">Reload</th:block>
+            </button>
         </div>
 
     <table  class="layui-table">
@@ -25,15 +26,15 @@
         <tr>
             <th></th>
             <!--<th>Code</th>-->
-            <th>Name</th>
+            <th th:text="#{monitor.name}">Name</th>
             <!--<th>isSend</th>-->
-            <th>isSendEmail</th>
-            <th>emails</th>
-            <th>triggerCondition</th>
-            <th>Remark</th>
-            <th>lastUpdateTime</th>
+            <th th:text="#{monitor.isSendEmail}">isSendEmail</th>
+            <th th:text="#{monitor.emails}">emails</th>
+            <th th:text="#{monitor.triggerCondition}">triggerCondition</th>
+            <th th:text="#{monitor.remark}">Remark</th>
+            <th th:text="#{monitor.lastUpdateTime}">lastUpdateTime</th>
             <!--<th>Status</th>-->
-            <th>Edit</th>
+            <th th:text="#{common.edit}">Edit</th>
         </tr>
         </thead>
         <tbody>

@@ -13,12 +13,17 @@ import com.yxifu.datainspection.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.Locale;
 
 /**
@@ -40,7 +45,36 @@ public class HomeController {
 
         model.addAttribute("name","123456");
         model.addAttribute("topNavBar","home");
+        model.addAttribute("locale",request.getLocale());
         System.out.println(request.getLocale());
+
+        String mdPath ="";
+        String mdContent ="";
+
+        if("zh".equals(localeResolver.resolveLocale(request).toString().substring(0,2))) {
+            mdPath = "classpath:templates/home/home_zh.md";
+        } else// if(request.getLocale().toString().substring(0,1)=="en") {
+        {
+            mdPath = "classpath:templates/home/home_en.md";
+        }
+        try {
+            File file = ResourceUtils.getFile(mdPath);
+            StringBuilder result = new StringBuilder();
+            try{
+                BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
+                String s = null;
+                while((s = br.readLine())!=null){//使用readLine方法，一次读一行
+                    result.append(System.lineSeparator()+s);
+                }
+                br.close();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            mdContent = result.toString();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        model.addAttribute("mdContent",mdContent);
         return "home/index";
     }
 /*

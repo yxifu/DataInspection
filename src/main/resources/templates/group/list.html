@@ -11,13 +11,14 @@
     <!--body-->
     <div class="layui-body" style="padding: 10px;">
 
-        <h3 th:text="#{home.group}"></h3>
+        <!--<h3 th:text="#{home.group}"></h3>-->
             <button class="layui-btn" onclick="click_edit(0);return false;">
                 <svg class="bi bi-plus" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
                     <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
                 </svg>
-                Add</button>
+                <th:block th:text="#{group.add}">Add</th:block>
+                </button>
 
         <table  class="layui-table">
             <thead>
@@ -53,7 +54,7 @@
                     <td th:text="${group.triggerCondition==0?'有数据执行':'固定执行'}">Onions</td>
                     <td th:text="${group.remark}"></td>
                     <td th:text="${group.lastUpdateTime}"></td>
-                    <td><span th:if="${group.status==0}">停用</span></td>
+                    <td><span th:if="${group.status==0}" th:text="#{status.stop}">停用</span></td>
                     <td th:object="${group}" >
                         <!--<a th:onclick="|click_edit(${group.groupId});return false;|" href="#">Edit</a> | -->
                         <!--<a
@@ -61,11 +62,11 @@
                             th:href="@{'/group/result?id='+${group.groupId}}" target="_blank" >Result</a>-->
 
                         <div class="layui-btn-group">
-                            <a class="layui-btn layui-btn-sm" th:href="@{'/group/view?id='+${group.groupId}}" target="_blank" ><i class="layui-icon">&#xe642;</i></a>
-                            <button type="button" class="layui-btn layui-btn-sm"  title="删除" onclick="layer.alert('开发中...')">
+                            <a class="layui-btn layui-btn-sm" th:href="@{'/group/view?id='+${group.groupId}}"  th:title="#{common.edit}"  target="_blank" ><i class="layui-icon">&#xe642;</i></a>
+                            <button type="button" class="layui-btn layui-btn-sm" th:title="#{common.del}" onclick="return dev();">
                                 <i class="layui-icon">&#xe640;</i>
                             </button>
-                            <a class="layui-btn layui-btn-sm" th:href="@{'/group/result?id='+${group.groupId}}" target="_blank" ><i class="layui-icon">&#xe602;</i></a>
+                            <a class="layui-btn layui-btn-sm" th:href="@{'/group/result?id='+${group.groupId}}"  th:title="#{common.viewResult}"  target="_blank" ><i class="layui-icon">&#xe602;</i></a>
                         </div>
                     </td>
                 </tr>

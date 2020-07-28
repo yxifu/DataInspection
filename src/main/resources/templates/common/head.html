@@ -27,5 +27,11 @@
         .single-page .layui-layout-admin .layui-body{ position: inherit; top:60px;}
         .single-page .layui-layout-admin .layui-footer{position:inherit; text-align:center;}
     </style>
+    <script th:inline="javascript">
+        function dev() {
+            layer.alert([[#{common.dev}]]);
+            return false;
+        }
+    </script>
 </head>
 </html>

@@ -5,22 +5,22 @@
         <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
         <ul class="layui-nav layui-nav-tree"  lay-filter="test">
             <li class="layui-nav-item layui-nav-itemed">
-                <a class="" href="javascript:;">基础设置</a>
+                <a class="" href="javascript:;" th:text="#{setting.menu.base}">基础设置</a>
                 <dl class="layui-nav-child">
-                    <dd><a href="/setting/email">邮件发送设置</a></dd>
-                    <dd><a href="/conn/list">连接字符串设置</a></dd>
+                    <dd><a href="/setting/email" th:text="#{setting.menu.base.email}">邮件发送设置</a></dd>
+                    <dd><a href="/conn/list" th:text="#{setting.menu.base.conn}">连接字符串设置</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item layui-nav-itemed">
-                <a href="javascript:;">用户设置</a>
+                <a href="javascript:;" th:text="#{setting.menu.user}">用户设置</a>
                 <dl class="layui-nav-child">
-                    <dd><a href="/setting/modifyPassword">修改密码</a></dd>
+                    <dd><a href="/setting/modifyPassword" th:text="#{setting.menu.user.modifyPwd}">修改密码</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item layui-nav-itemed">
-                <a href="javascript:;">其它</a>
+                <a href="javascript:;" th:text="#{setting.menu.other}">其它</a>
                 <dl class="layui-nav-child">
-                    <dd><a href="javascript:;">关于</a></dd>
+                    <dd><a href="javascript:;" th:text="#{setting.menu.other.about}">关于</a></dd>
                 </dl>
             </li>
         </ul>

@@ -81,12 +81,12 @@
             </div>-->
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn layui-btn-primary" lay-submit lay-filter="testEmail">测试邮箱</button>
-                    <button class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
+                    <button class="layui-btn layui-btn-primary" lay-submit lay-filter="testEmail" th:text="#{email.test}">测试邮箱</button>
+                    <button class="layui-btn" lay-submit lay-filter="formSubmit" th:text="#{common.save}">保存</button>
                 </div>
             </div>
         </form>
-        <script>
+        <script th:inline="javascript">
             //Demo
             layui.use('form', function(){
                 var form = layui.form;
@@ -94,7 +94,7 @@
                 form.verify({
                     myRequire: function(value, item) { //value：表单的值、item：表单的DOM对象
                         if(value.length==0){
-                            return '不能为空';
+                            return [[#{valid.require}]];
                         }
                     }
                 });
@@ -108,12 +108,12 @@
                         $.post('/setting/testEmail', vd, function (returnData) {
                             // console.log(returnData);
                             if (returnData.error_code == 0 && returnData.data) {
-                                layer.alert("测试成功！", {
-                                    title: '测试', icon: 1, end: function () {
+                                layer.alert([[#{common.success}]], {
+                                    title: [[#{email.test}]], icon: 1, end: function () {
                                     }
                                 });
                             } else {
-                                layer.alert("测试失败：" + returnData.message, {title: '测试', icon: 2});
+                                layer.alert([[#{common.failed}]] + returnData.message, {title: '测试', icon: 2});
                             }
                         });
                     }
@@ -129,12 +129,12 @@
                         $.post('/setting/email', data.field, function (returnData) {
                             // console.log(returnData);
                             if (returnData.error_code == 0) {
-                                layer.alert("保存成功！", {
-                                    title: '保存', icon: 1, end: function () {
+                                layer.alert([[#{common.save.success}]], {
+                                    title: [[#{common.save}]], icon: 1, end: function () {
                                     }
                                 });
                             } else {
-                                layer.alert("保存失败：" + returnData.message, {title: '保存', icon: 2});
+                                layer.alert([[#{common.save.failed}]] + returnData.message, {title: [[#{common.save}]], icon: 2});
                             }
                         });
                     }
@@ -162,16 +162,16 @@
         }
         function checkValue() {
             if ($('#mail_host').val() == '') {
-                alert("mail_host不能为空");
+                alert("mail_host"+[[#{valid.require}]]);
                 return false;
             } else if ($('#mail_smtp_port').val() == '') {
-                alert("mail_smtp_port不能为空");
+                alert("mail_smtp_port"+[[#{valid.require}]]);
                 return false;
             } else if ($('#email').val() == '') {
-                alert("email不能为空");
+                alert("email"+[[#{valid.require}]]);
                 return false;
             } else if ($('#password').val() == '') {
-                alert("password不能为空");
+                alert("password"+[[#{valid.require}]]);
                 return false;
             }
             return true;

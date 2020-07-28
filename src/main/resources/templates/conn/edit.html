@@ -6,13 +6,13 @@
     <form class="layui-form">
         <input type="hidden" id="connId" name="connId" th:value="${conn.connId}">
         <div class="layui-form-item">
-            <label for="name" class="layui-form-label">Name</label>
+            <label for="name" class="layui-form-label" th:text="#{conn.name}">Name</label>
             <div class="layui-input-block">
                 <input type="text" class="layui-input" lay-verify="myRequire" id="name" name="name" th:value="${conn.name}">
             </div>
         </div>
         <div class="layui-form-item">
-            <label for="type" class="layui-form-label">Type</label>
+            <label for="type" class="layui-form-label" th:text="#{conn.type}">Type</label>
             <div class="layui-input-block">
                 <select id="type" name="type" class="layui-input">
                     <option th:selected="${conn.type=='com.mysql.jdbc.Driver'}" value="com.mysql.jdbc.Driver" >MySql</option>
@@ -25,39 +25,39 @@
         </div>
 
         <div class="layui-form-item">
-            <label for="connString" class="layui-form-label">ConnString</label>
+            <label for="connString" class="layui-form-label" th:text="#{conn.connString}">ConnString</label>
             <div class="layui-input-block">
                 <input type="text" class="layui-input"  lay-verify="myRequire" id="connString" name="connString" th:value="${conn.connString}">
             </div>
         </div>
         <div class="layui-form-item">
-            <label for="username" class="layui-form-label">UserName</label>
+            <label for="username" class="layui-form-label" th:text="#{conn.userName}">UserName</label>
             <div class="layui-input-block">
                 <input type="text" class="layui-input" lay-verify="myRequire" id="username" name="username" th:value="${conn.username}">
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label for="password" class="layui-form-label">Password</label>
+            <label for="password" class="layui-form-label" th:text="#{conn.password}">Password</label>
             <div class="layui-input-block">
                 <input type="password" class="layui-input" id="password" name="password" th:value="${conn.password}">
             </div>
         </div>
         <div class="layui-form-item">
-            <label for="remark" class="layui-form-label">Remark</label>
+            <label for="remark" class="layui-form-label" th:text="#{common.remark}">Remark</label>
             <div class="layui-input-block">
                 <textarea id="remark" name="remark" th:text="${conn.remark}" class="layui-textarea"></textarea>
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn layui-btn-primary" lay-submit lay-filter="testConn">测试连接</button>
-                <button class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
+                <button class="layui-btn layui-btn-primary" lay-submit lay-filter="testConn"  th:text="#{conn.test}">测试连接</button>
+                <button class="layui-btn" lay-submit lay-filter="formSubmit" th:text="#{common.save}">保存</button>
             </div>
         </div>
     </form>
 
-    <script>
+    <script th:inline="javascript">
         //Demo
         layui.use('form', function(){
             var form = layui.form;
@@ -66,7 +66,7 @@
                 myRequire: function(value, item) { //value：表单的值、item：表单的DOM对象
                     //console.log(value);
                     if(value.length==0){
-                        return '不能为空';
+                        return [[#{valid.require}]];
                     }
                 }
             });
@@ -76,9 +76,9 @@
                 $.post('/conn/testConn',data.field,function (returnData) {
                     // console.log(returnData);
                     if(returnData.error_code==0 && returnData.data){
-                        layer.alert("连接成功！",{title:'保存',icon:1,end:function () {}});
+                        layer.alert([[#{common.success}]],{title:'保存',icon:1,end:function () {}});
                     } else{
-                        layer.alert("保存失败："+returnData.message,{title:'保存',icon:2});
+                        layer.alert([[#{common.failed}]]+returnData.message,{title:'保存',icon:2});
                     }
                 });
 
