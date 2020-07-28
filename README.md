@@ -1,6 +1,5 @@
-
+[English READEME_en.md](https://github.com/yxifu/DataInspection/tree/master/src/main/resources/templates/home/home_en.md)
 # Data Inspection(数据巡检)
-- 暂时只开发了中文版，稍后会推中英双语版
 ## 介绍
 ### 简介
 查找错误数据，邮件提醒相关人员。
