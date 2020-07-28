@@ -1,4 +1,4 @@
-[English READEME_en.md](https://github.com/yxifu/DataInspection/tree/master/src/main/resources/templates/home/home_zh.md)
+[中文 READEME_zh.md](https://github.com/yxifu/DataInspection/tree/master/src/main/resources/templates/home/home_zh.md)
 
 # Data Inspection
 - Only the Chinese version has been developed for the time being, and the bilingual version will be released later
