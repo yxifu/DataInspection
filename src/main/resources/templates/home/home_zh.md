@@ -26,6 +26,10 @@
 
 ## 安装
 ### JAR安装说明
+- 下载JAR
+- 运行JAR 
+- 测试：`java -jar  -Xmx128m DataInspection.jar --server.port=9900 --project.home=/usr/local/DataInspection/`
+- 后台运行： `java -jar  -Xmx128m DataInspection.jar --server.port=9900 --project.home=/usr/local/DataInspection/ &`
 
 ### Docker安装说明
 
