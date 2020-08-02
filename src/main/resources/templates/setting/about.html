@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="common/head::head('Setting-DataInspection')"></th:block>
+    <link rel="stylesheet" href="/js/editormd/css/editormd.preview.min.css">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!--header-->
+    <div th:replace="common/navbar::navbar(${topNavBar})"></div>
+    <!--END header-->
+    <!--sider-->
+    <div th:replace="common/settingMenu"></div>
+    <!--END sider-->
+    <!--body-->
+    <div class="layui-body" style="padding: 10px;">
+
+        <div id="test-markdown-view">
+            <!-- Server-side output Markdown text -->
+
+            <textarea style="display:none;" th:text="${mdContent}"></textarea>
+        </div>
+    </div>
+    <!--END body-->
+    <!--footer-->
+    <div th:replace="common/footer"></div>
+    <!--END footer-->
+</div>
+
+
+<script src="/js/editormd/lib/marked.min.js"></script>
+<script src="/js/editormd/lib/prettify.min.js"></script>
+<script src="/js/editormd/editormd.min.js"></script>
+<script type="text/javascript">
+    $(function() {
+        var testView = editormd.markdownToHTML("test-markdown-view", {
+            // markdown : "[TOC]\n### Hello world!\n## Heading 2", // Also, you can dynamic set Markdown text
+            // htmlDecode : true,  // Enable / disable HTML tag encode.
+            // htmlDecode : "style,script,iframe",  // Note: If enabled, you should filter some dangerous HTML tags for website security.
+        });
+    });
+</script>
+</body>
+</html>

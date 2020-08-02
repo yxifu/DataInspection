@@ -13,13 +13,19 @@ import com.yxifu.datainspection.util.Tools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.LocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.PathParam;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 /**
  * @author yxifu
@@ -35,6 +41,9 @@ public class SettingController {
 
     @Autowired
     EmailService emailService;
+
+    @Autowired
+    private LocaleResolver localeResolver;
 
     @RequestMapping({"","/"})
     public String index(Model model, HttpServletRequest request, HttpServletResponse response){
@@ -228,5 +237,39 @@ public class SettingController {
             }
         }
         return apiInterface;
+    }
+
+    @RequestMapping("/about")
+    public String about(Model model, HttpServletRequest request, HttpServletResponse response){
+        String projectHome = System.getProperty("project.home");
+        model.addAttribute("topNavBar","setting");
+        model.addAttribute("projectHome",projectHome);
+
+
+        String mdPath = "classpath:templates/setting/about_en.md";
+        if("zh".equals(localeResolver.resolveLocale(request).toString().substring(0,2))) {
+            mdPath = "classpath:templates/setting/about_zh.md";
+        }
+        String mdContent ="";
+        try {
+            File file = ResourceUtils.getFile(mdPath);
+            StringBuilder result = new StringBuilder();
+            try{
+                BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
+                String s = null;
+                while((s = br.readLine())!=null){//使用readLine方法，一次读一行
+                    result.append(System.lineSeparator()+s);
+                }
+                br.close();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            mdContent = result.toString();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        mdContent = mdContent.replace("${project.home}",projectHome);
+        model.addAttribute("mdContent",mdContent);
+        return "setting/about";
     }
 }

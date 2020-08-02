@@ -1,17 +1,20 @@
 server:
   port: 9900
+project:
+  home: ~
+  dbPath: ${project.home}\DataInspection.sqlite3
+  logPath: ${project.home}\log\
 spring:
   profiles:
     active: dev
   datasource:
     driver-class-name: org.sqlite.JDBC
-    #url: jdbc:sqlite:D:/temp/SQLiteDB/DataInspection.sqlite3
-    url: jdbc:sqlite:${user.dir}\DataInspection.sqlite3
+    url: jdbc:sqlite:${project.dbPath}
     username:
     password:
   messages:
     basename: i18n/messages
 datainspection:
-  logdir: ${user.dir}\log\
+  logdir: ${project.logPath}
 
 
