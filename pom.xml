@@ -6,7 +6,7 @@
 
     <groupId>com.yxifu</groupId>
     <artifactId>data-Inspection</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.4</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -141,6 +141,15 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!--添加配置跳过测试-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <!--添加配置跳过测试-->
         </plugins>
     </build>
 </project>
